@@ -1,6 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-const db = require("./db");
+const db = require("../models/db.js");
 
 var app = express();
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 module.exports= app;
 
-require("../routes/middleware.js")(app)
+require("../routes/restaurant.js")(app)
 
 
 app.listen(3000,function(){

@@ -1,6 +1,9 @@
-var mysql = require("mysql");
+const mysql = require("mysql");
+
+
 
 module.exports={
+    mysql,
     con: mysql.createConnection({
         host:"remotemysql.com",
         user: "jkQxXAT7W2",
