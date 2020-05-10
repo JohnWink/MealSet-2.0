@@ -6,7 +6,7 @@ const Plate = require("../models/plate.js")
         //If something goes wrong getting the data from the database: 
         if(err){
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving restaurants"
+                message: err.message || "Some error occurred while retrieving plates"
             })
         }else{
             res.send(data)
@@ -17,7 +17,7 @@ const Plate = require("../models/plate.js")
 
 
 exports.findById = (req,res) =>{
-    Restaurant.findById(req.params.restaurantId,(err,data)=>{
+    Plate.findById(req.params.plateId,(err,data)=>{
         if(err){
             res.status(500).send({
                 message:err.message || err
