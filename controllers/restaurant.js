@@ -56,7 +56,7 @@ exports.create = (req,res) =>{
                     message:err.message || err
                 })
             }
-                console.log("Sucesso")
+                console.log("Sucesso na criação do restaurante")
                 res.status(201).send({message:"Success"})
             
         })

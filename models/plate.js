@@ -6,6 +6,7 @@ const Plate = function (plate) {
     this.descrição = plate.description
     this.preço = plate.price
     this.foto = plate.photo
+    this.idRestaurante = plate.idRestaurant
 
 }
 // Gets All plates from Database

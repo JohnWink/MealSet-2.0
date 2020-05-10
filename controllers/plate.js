@@ -43,7 +43,8 @@ exports.create = (req,res) =>{
             name: req.body.name,
             description: req.body.description,
             price: req.body.price,
-            foto: req.body.foto
+            foto: req.body.foto,
+            idRestaurant: req.body.idRestaurant
         })
 
         //Save Plate in the database
@@ -54,7 +55,7 @@ exports.create = (req,res) =>{
                     message:err.message || err
                 })
             }
-                console.log("Sucesso")
+                console.log("Sucesso na criação do prato")
                 res.status(201).send({message:"Success"})
             
         })
