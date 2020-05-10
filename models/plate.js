@@ -1,27 +1,24 @@
 const db = require("../models/db")
 
 //Constructor
-const Restaurant = function (restaurant) {
-    this.nome = restaurant.name
-    this.descrição = restaurant.description
-    this.estacionamento = restaurant.parking
-    this.coverFoto = restaurant.foto
-    this.gps = restaurant.gpsAddress
-    this.morada = restaurant.address
-    this.Codigo_postal = restaurant.zipCode
+const Plate = function (plate) {
+    this.nome = plate.name
+    this.descrição = plate.description
+    this.preço = plate.price
+    this.foto = plate.photo
 
 }
-// Gets All restaurants from Database
-Restaurant.getAll = result => {
+// Gets All plates from Database
+Plate.getAll = result => {
 
-    db.con.query('SELECT * FROM Restaurante;', function (err, res) {
+    db.con.query('SELECT * FROM Prato;', function (err, res) {
         if (err) {
             console.log(err)
             result(null, err)
             return
         } else {
 
-            console.log("Restaurants: ", res)
+            console.log("Plates: ", res)
             result(null, res)
             return
 
@@ -29,11 +26,12 @@ Restaurant.getAll = result => {
     })
 }
 
+
 // Gets ONE Selected Restaurant from Database
-Restaurant.findById = (restaurantId, result) => {
+Plate.findById = (plateId, result) => {
 
     //Send prepared command to Database
-    db.con.query("SELECT * FROM Restaurante WHERE idRestaurante = ?", restaurantId, (err, res) => {
+    db.con.query("SELECT * FROM Prato WHERE idPrato = ?", plateId, (err, res) => {
 
         // If there's any problem with the data retrieval 
         if (err) {
@@ -55,15 +53,15 @@ Restaurant.findById = (restaurantId, result) => {
 
 }
 
-Restaurant.create = (newRestaurant, result) => {
+Plate.create = (newPlate, result) => {
     //Preparing to add new restaurant Database
-    db.con.query("INSERT INTO Restaurante SET ?", newRestaurant, (err, res) => {
+    db.con.query("INSERT INTO Prato SET ?", newPlate, (err, res) => {
         if (err) {
             console.log("error:", err)
             result(err, null)
 
         } else {
-            console.log("Restaurante criado")
+            console.log("Prato criado")
             result(null, res)
         }
     })
@@ -71,4 +69,4 @@ Restaurant.create = (newRestaurant, result) => {
     return
 }
 
-module.exports = Restaurant
+module.exports = Plate
