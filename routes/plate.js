@@ -6,7 +6,7 @@ module.exports = app =>{
 
     app.post('/plates', plates.create)
 
-    app.get('/plates/:platesID', plates.findById)
+    app.get('/plates/:plateId', plates.findById)
 
     
 }

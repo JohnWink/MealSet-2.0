@@ -6,6 +6,7 @@ const Plate = function (plate) {
     this.descrição = plate.description
     this.preço = plate.price
     this.foto = plate.photo
+    this.idRestaurante = plate.idRestaurant
 
 }
 // Gets All plates from Database
@@ -27,9 +28,9 @@ Plate.getAll = result => {
 }
 
 
-// Gets ONE Selected Restaurant from Database
+// Gets ONE Selected plate from Database
 Plate.findById = (plateId, result) => {
-
+console.log("ID DO PRATO: " + plateId)
     //Send prepared command to Database
     db.con.query("SELECT * FROM Prato WHERE idPrato = ?", plateId, (err, res) => {
 
@@ -39,12 +40,12 @@ Plate.findById = (plateId, result) => {
             result(err, null)
             return
         }
-        // If there's the found Restaurant
+        // If there's the found plate
         else if (res[0]) {
             result(null, res[0])
             return
         }
-        // If there's no restaurant found
+        // If there's no plate found
         else {
             result({ kind: "not_found" }, null)
             return
@@ -54,7 +55,7 @@ Plate.findById = (plateId, result) => {
 }
 
 Plate.create = (newPlate, result) => {
-    //Preparing to add new restaurant Database
+    //Preparing to add new plate Database
     db.con.query("INSERT INTO Prato SET ?", newPlate, (err, res) => {
         if (err) {
             console.log("error:", err)

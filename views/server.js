@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 module.exports= app;
 
 require("../routes/restaurant.js")(app)
+require("../routes/plate.js")(app)
 
 require("../routes/plate.js")(app)
 
