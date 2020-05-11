@@ -11,7 +11,7 @@ const Plate = function (plate) {
 // Gets All plates from Database
 Plate.getAll = result => {
 
-    db.con.query('SELECT * FROM Prato;', function (err, res) {
+    db.con.query('SELECT * FROM Prato', function (err, res) {
         if (err) {
             console.log(err)
             result(null, err)
