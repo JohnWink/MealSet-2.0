@@ -17,7 +17,7 @@ Restaurant.getAll = result => {
     db.con.query('SELECT * FROM Restaurante;', function (err, res) {
         if (err) {
             console.log(err)
-            result(null, err)
+            result(err, null)
             return
         } else {
 
