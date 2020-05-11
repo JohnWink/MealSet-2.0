@@ -1,4 +1,4 @@
-module.exports = app =>{
+module.exports = app => {
 
     const plates = require("../controllers/plate.js")
 
@@ -8,7 +8,9 @@ module.exports = app =>{
 
     app.get('/plates/:plateId', plates.findById)
 
-    
+    app.delete("/plates/:plateId", plates.delete);
+
+    app.delete("/platesDelete", plates.deleteAll);
 }
 
 

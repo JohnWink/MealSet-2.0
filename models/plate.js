@@ -30,7 +30,7 @@ Plate.getAll = result => {
 
 // Gets ONE Selected plate from Database
 Plate.findById = (plateId, result) => {
-console.log("ID DO PRATO: " + plateId)
+    console.log("ID DO PRATO: " + plateId)
     //Send prepared command to Database
     db.con.query("SELECT * FROM Prato WHERE idPrato = ?", plateId, (err, res) => {
 
@@ -69,5 +69,37 @@ Plate.create = (newPlate, result) => {
 
     return
 }
+
+Plate.remove = (plateId, result) => {
+    db.con.query("DELETE FROM Prato WHERE id = ?", plateId, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            // not found plate with the id
+            result({ kind: "not_found" }, null);
+            return;
+        }
+
+        console.log("deleted customer with id: ", plateId);
+        result(null, res);
+    });
+};
+
+Plate.removeAll = result => {
+    db.con.query("DELETE FROM Prato", (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+  
+      console.log(`deleted ${res.affectedRows} plates`);
+      result(null, res);
+    });
+  };
 
 module.exports = Plate
