@@ -17,7 +17,7 @@ exports.getAll = (req, res) => {
 
 
 exports.findById = (req, res) => {
-    Plate.findById(req.params.plateId, (err, data) => {
+    Plate.findById(req.params.idPlate, (err, data) => {
         if (err) {
             res.status(500).send({
                 message: err.message || err
@@ -44,7 +44,7 @@ exports.create = (req, res) => {
             description: req.body.description,
             price: req.body.price,
             foto: req.body.foto,
-            idRestaurant: req.body.idRestaurant
+            idRestaurant: req.params.idRestaurant
         })
 
         //Save Plate in the database
@@ -63,23 +63,23 @@ exports.create = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Plate.remove(req.params.plateId, (err, data) => {
+    Plate.remove(req.params.idPlate, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Prato com o id ${req.params.plateId} não encontrado.`
+                    message: `Prato com o id ${req.params.idPlate} não encontrado.`
                 });
             } else {
                 res.status(500).send({
-                    message: `Prato com o id ${req.params.plateId} não eliminado.`
+                    message: `Prato com o id ${req.params.idPlate} não eliminado.`
                 });
             }
-        } else res.send({ message: `Prato com o id ${req.params.plateId} foi eliminado!` });
+        } else res.send({ message: `Prato com o id ${req.params.idPlate} foi eliminado!` });
     });
 };
 
 exports.deleteAll = (req, res) => {
-    Plate.removeAll((err, data) => {
+    Plate.deleteAll(req.params.idRestaurant,(err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -87,4 +87,31 @@ exports.deleteAll = (req, res) => {
         });
       else res.send({ message: `All plates were deleted successfully!` });
     });
-  };
+  }
+
+  exports.update=(req,res) =>{
+      if(!req.body){
+          res.status(400).send({
+              mesage:"Content cannot be empty!"
+          })
+      }
+      else{
+          const plate = new Plate({
+              name:req.body.name,
+              description: req.body.description,
+              price: req.body.price,
+              foto: req.body.photo
+          })
+
+          Plate.update(req.params.idPlate,plate,(err,data)=>{
+            if(err){
+                res.status(500).send({
+                    message:err.message || err
+                })
+            }
+            else{
+                res.status(200).send({"success":data})
+            }
+          })
+      }
+  }

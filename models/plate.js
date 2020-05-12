@@ -89,8 +89,8 @@ Plate.remove = (plateId, result) => {
     });
 };
 
-Plate.removeAll = result => {
-    db.con.query("DELETE FROM Prato", (err, res) => {
+Plate.deleteAll = (restaurantId,result) => {
+    db.con.query("DELETE FROM Prato WHERE idRestaurante = ?",restaurantId, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -101,5 +101,21 @@ Plate.removeAll = result => {
       result(null, res);
     });
   };
+
+  Plate.update=(id, plate,result)=>{
+      db.con.query("UPDATE Prato SET nome=?,descrição=?,preço=?,foto=? WHERE idPrato = ?",
+      [plate.nome, plate.descrição, plate.preço,plate.foto,id],
+      (err,res)=>{
+          if(err){
+              result(err,null)
+          }
+          else if(res.affectedRows == 0){
+              result({kind:"not found"}, null)
+          }
+          else{
+              result(null,{plate})
+          }
+      })
+  }
 
 module.exports = Plate

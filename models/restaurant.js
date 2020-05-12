@@ -71,4 +71,52 @@ Restaurant.create = (newRestaurant, result) => {
     return
 }
 
+Restaurant.update = (id,restaurantInfo,result) =>{
+
+    db.con.query("UPDATE Restaurante SET nome=?, descrição=?, estacionamento=?, coverFoto=?, gps=?, morada=?, Codigo_postal=? WHERE idRestaurante=? ",
+    [restaurantInfo.nome, restaurantInfo.descrição, restaurantInfo.estacionamento, restaurantInfo.coverFoto,restaurantInfo.gps, restaurantInfo.morada,restaurantInfo.Codigo_postal,id],
+    (err,res)=>{
+        if(err){
+            console.log("error:", err);
+            result(err,null)
+        }
+        //If no row has been affected/changed, an error will occur
+        else if(res.affectedRows == 0){
+            result({kind:"not found"},null)
+        }else{
+            console.log("updated restaurant: ", {restaurantInfo});
+            result(null,{restaurantInfo})
+        }
+    })
+}
+
+Restaurant.delete = (id,result) =>{
+    //First we delete all the dishes that belong to the restaurant we're doing to delete. 
+    db.con.query("DELETE FROM Prato WHERE idRestaurante = ?",id,(err,res)=>{
+        if(err){
+            console.log("error:", err);
+            result(err,null)
+        }
+    
+        else{
+            //Only after all of the plates are deleted, we can perform the delete of the restaurant
+            db.con.query("DELETE FROM Restaurante WHERE idRestaurante = ?",id,(err,res)=>{
+                if(err){
+                    console.log("error:", err);
+                    result(err,null)
+                }
+                else if(res.affectedRows == 0){
+                    result({kind:"not found"},null)
+                }
+                else{
+                    console.log("Restaurant deleted")
+                    
+                }
+            })
+           
+        }
+    })
+    
+}
+
 module.exports = Restaurant

@@ -4,13 +4,15 @@ module.exports = app => {
 
     app.get('/plates', plates.getAll)
 
-    app.post('/plates', plates.create)
+    app.get('/plates/:idPlate', plates.findById)
 
-    app.get('/plates/:plateId', plates.findById)
+    app.put('/plates/:idPlate',plates.update)
 
-    app.delete("/plates/:plateId", plates.delete);
+    app.post('/restaurants/:idRestaurant/plates', plates.create)
 
-    app.delete("/platesDelete", plates.deleteAll);
+    app.delete("/plates/:idPlate", plates.delete);
+
+    app.delete("/restaurants/:idRestaurant/plates", plates.deleteAll);
 }
 
 
