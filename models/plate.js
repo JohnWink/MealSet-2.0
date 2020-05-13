@@ -1,4 +1,4 @@
-const db = require("../models/db")
+const db = require("./db")
 
 //Constructor
 const Plate = function (plate) {
@@ -110,7 +110,7 @@ Plate.deleteAll = (restaurantId,result) => {
               result(err,null)
           }
           else if(res.affectedRows == 0){
-              result({kind:"not found"}, null)
+              result({kind:"not_found"}, null)
           }
           else{
               result(null,{plate})

@@ -110,7 +110,7 @@ exports.deleteAll = (req, res) => {
                 })
             }
             else{
-                res.status(200).send({"success":data})
+                res.status(200).send({"success":"Os dados foram atualizados com sucesso"})
             }
           })
       }
