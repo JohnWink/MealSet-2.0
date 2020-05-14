@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(expressSanitized.middleware());
 
 
-expressSanitized.sanitizeParams(app,['idRestaurant', 'idPlate','idTable'])
+expressSanitized.sanitizeParams(app,['idRestaurant', 'idPlate','idTable', 'idComposition'])
 
 module.exports= app;
 
@@ -21,6 +21,7 @@ require("../routes/restaurant.js")(app)
 require("../routes/plate.js")(app)
 require("../routes/table.js")(app)
 require("../routes/ingredient.js")(app)
+require("../routes/composition")(app)
 
 app.listen(3000,function(){
     console.log("Server running at http://127.0.0:3000/")
