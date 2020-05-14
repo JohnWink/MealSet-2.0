@@ -17,7 +17,7 @@ exports.getAll = (req,res) =>{
 }
 
 exports.findById = (req,res) => {
-    Table.findById = (req.params.idTable,(err,data)=>{
+    Table.findById(req.params.idTable,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Mesa não foi encontrada"})

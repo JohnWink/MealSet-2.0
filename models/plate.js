@@ -17,7 +17,11 @@ Plate.getAll = result => {
             console.log(err)
             result(null, err)
             return
-        } else {
+        } 
+        else if (!res[0]){
+            result({kind:"not_found"},null)
+        } 
+        else{
 
             console.log("Plates: ", res)
             result(null, res)
@@ -96,7 +100,7 @@ Plate.deleteAll = (restaurantId,result) => {
         return result(null, err);
         
       }
-      else if(err.affectedRows == 0){
+      else if(res.affectedRows == 0){
         return result({kind:"not_found"},null)
       }
       else{

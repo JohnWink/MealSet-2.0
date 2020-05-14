@@ -5,9 +5,16 @@ exports.getAll = (req, res) => {
     Plate.getAll((err, data) => {
         //If something goes wrong getting the data from the database: 
         if (err) {
-            res.status(500).send({
-                message: err.message || "Ocorreu um erro"
-            })
+            if(err.kind === "not_found"){
+                res.status(404).send({
+                    "Not Found": `Nenhum prato não foi encontrado.`
+                }); 
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
         } else {
             res.status(200).send({"success":[data]})
         }
