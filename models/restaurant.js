@@ -19,7 +19,14 @@ Restaurant.getAll = result => {
             console.log(err)
             result(err, null)
             return
-        } else {
+        
+        }
+
+        else if(!res[0]){
+            result({kind:"not_found"},null)
+        }
+
+        else {
 
             console.log("Restaurants: ", res)
             result(null, res)
@@ -38,18 +45,19 @@ Restaurant.findById = (restaurantId, result) => {
         // If there's any problem with the data retrieval 
         if (err) {
             console.log("error:", err)
-            result(err, null)
-            return
-        }
-        // If there's the found Restaurant
-        else if (res[0]) {
-            result(null, res[0])
-            return
+            return result(err, null)
+           
         }
         // If there's no restaurant found
+        else if (!res[0]) {
+            return result({ kind: "not_found" }, null)
+            
+            
+        }
+        // If there's the found Restaurant
         else {
-            result({ kind: "not_found" }, null)
-            return
+            return result(null, res[0])
+            
         }
     })
 
@@ -60,15 +68,15 @@ Restaurant.create = (newRestaurant, result) => {
     db.con.query("INSERT INTO Restaurante SET ?", newRestaurant, (err, res) => {
         if (err) {
             console.log("error:", err)
-            result(err, null)
+            return result(err, null)
 
         } else {
             console.log("Restaurante criado")
-            result(null, res)
+            return result(null, res)
         }
     })
 
-    return
+    
 }
 
 Restaurant.update = (id,restaurantInfo,result) =>{
@@ -78,14 +86,13 @@ Restaurant.update = (id,restaurantInfo,result) =>{
     (err,res)=>{
         if(err){
             console.log("error:", err);
-            result(err,null)
+            return result(err,null)
         }
         //If no row has been affected/changed, an error will occur
         else if(res.affectedRows == 0){
-            result({kind:"not found"},null)
+            return result({kind:"not_found"},null)
         }else{
-            console.log("updated restaurant: ", {restaurantInfo});
-            result(null,{restaurantInfo})
+            return result(null,"Restaurante Atualizado")
         }
     })
 }
@@ -95,7 +102,7 @@ Restaurant.delete = (id,result) =>{
     db.con.query("DELETE FROM Prato WHERE idRestaurante = ?",id,(err,res)=>{
         if(err){
             console.log("error:", err);
-            result(err,null)
+            return result(err,null)
         }
     
         else{
@@ -103,14 +110,14 @@ Restaurant.delete = (id,result) =>{
             db.con.query("DELETE FROM Restaurante WHERE idRestaurante = ?",id,(err,res)=>{
                 if(err){
                     console.log("error:", err);
-                    result(err,null)
+                   return  result(err,null)
                 }
                 else if(res.affectedRows == 0){
-                    result({kind:"not found"},null)
+                   return result({kind:"not_found"},null)
                 }
                 else{
-                    console.log("Restaurant deleted")
-                    
+                    console.log("Restaurante Apagado")
+                    return result(null,"success")
                 }
             })
            

@@ -5,9 +5,15 @@ const Restaurant = require("../models/restaurant.js")
     Restaurant.getAll((err,data)=>{
         //If something goes wrong getting the data from the database: 
         if(err){
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving restaurants"
-            })
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found" : "Restaurantes não foram encontrados"})
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
+           
         }else{
             res.status(200).send({"success":[data]})
         }
@@ -19,9 +25,14 @@ exports.findById = (req,res) =>{
     console.log(req.params.idRestaurant)
     Restaurant.findById(req.params.idRestaurant,(err,data)=>{
         if(err){
-            res.status(500).send({
-                message:err.message || err
-            })
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found" : "Restaurante não foi encontrado"})
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
         }else{
            
             res.status(200).send({"success":[data]})
@@ -55,11 +66,11 @@ exports.create = (req,res) =>{
             if(err){
                 console.log("error catched")
                 res.status(500).send({
-                    message:err.message || err
+                    message:err.message || "Ocorreu um erro"
                 })
             }
                 console.log("Sucesso na criação do restaurante")
-                res.status(201).send({message:"success"})
+                res.status(201).send({"success":"Restaurante Criado com sucesso"})
             
         })
     }
@@ -85,11 +96,16 @@ exports.update = (req,res) =>{
 
        Restaurant.update(req.params.idRestaurant,restaurant,(err,data)=>{
            if(err){
-               res.status(500).send({
-                   message:err.message || err
-               })
+                if(err.kind === "not_found"){
+                    res.status(404).send({"Not found" : "Restaurante não foi encontrado"})
+                }
+                else{
+                    res.status(500).send({
+                        message: err.message || "Ocorreu um erro"
+                    })
+                }
            }else{
-               res.status(200).send({"success": data})
+               res.status(200).send({"success": "Restaurante Atualizado com sucesso"})
            }
        })
     }
@@ -98,9 +114,14 @@ exports.update = (req,res) =>{
 exports.delete = (req,res) =>{
     Restaurant.delete(req.params.idRestaurant,(err,data)=>{
         if(err){
-            res.status(500).send({
-                message:err.message || err
-            })
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found" : "Restaurante não foi encontrado"})
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
         }else{
             res.status(204).send()
         }

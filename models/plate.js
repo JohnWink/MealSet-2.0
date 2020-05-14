@@ -70,7 +70,7 @@ Plate.create = (newPlate, result) => {
     return
 }
 
-Plate.remove = (plateId, result) => {
+Plate.delete = (plateId, result) => {
     db.con.query("DELETE FROM Prato WHERE id = ?", plateId, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -93,12 +93,18 @@ Plate.deleteAll = (restaurantId,result) => {
     db.con.query("DELETE FROM Prato WHERE idRestaurante = ?",restaurantId, (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(null, err);
-        return;
+        return result(null, err);
+        
+      }
+      else if(err.affectedRows == 0){
+        return result({kind:"not_found"},null)
+      }
+      else{
+        console.log(`deleted ${res.affectedRows} plates`);
+        return result(null, res);
       }
   
-      console.log(`deleted ${res.affectedRows} plates`);
-      result(null, res);
+     
     });
   };
 

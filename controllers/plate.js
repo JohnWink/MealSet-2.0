@@ -6,10 +6,10 @@ exports.getAll = (req, res) => {
         //If something goes wrong getting the data from the database: 
         if (err) {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving plates"
+                message: err.message || "Ocorreu um erro"
             })
         } else {
-            res.send(data)
+            res.status(200).send({"success":[data]})
         }
     })
 
@@ -19,11 +19,19 @@ exports.getAll = (req, res) => {
 exports.findById = (req, res) => {
     Plate.findById(req.params.idPlate, (err, data) => {
         if (err) {
-            res.status(500).send({
-                message: err.message || err
-            })
+            if(err.kind === "not_found"){
+                res.status(404).send({
+                    "Not Found": `O prato não foi encontrado.`
+                }); 
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
+            
         } else {
-            res.send(data)
+            res.status(200).send({"success":[data]})
         }
     })
 }
@@ -34,7 +42,7 @@ exports.create = (req, res) => {
     //Validar pedido
     if (!req.body) {
         res.status(400).send({
-            message: "Contend Cannot be empty!"
+            message: "Por favor preencha os requisitos"
         })
     }
     else {
@@ -52,47 +60,58 @@ exports.create = (req, res) => {
             if (err) {
                 console.log("error catched")
                 res.status(500).send({
-                    message: err.message || err
+                    message: err.message || "Ocorreu um erro"
                 })
             }
             console.log("Sucesso na criação do prato")
-            res.status(201).send({ message: "Success" })
+            res.status(201).send({ "success": "Prato criado" })
 
         })
     }
 }
 
 exports.delete = (req, res) => {
-    Plate.remove(req.params.idPlate, (err, data) => {
+    Plate.delete(req.params.idPlate, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Prato com o id ${req.params.idPlate} não encontrado.`
+                    "Not Found": `O prato não foi encontrado.`
                 });
             } else {
                 res.status(500).send({
-                    message: `Prato com o id ${req.params.idPlate} não eliminado.`
+                    message: err.message || "Ocorreu um erro"
                 });
             }
-        } else res.send({ message: `Prato com o id ${req.params.idPlate} foi eliminado!` });
+        } else res.status(204).send();
     });
 };
 
 exports.deleteAll = (req, res) => {
     Plate.deleteAll(req.params.idRestaurant,(err, data) => {
-      if (err)
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while removing all plates."
-        });
-      else res.send({ message: `All plates were deleted successfully!` });
+      if (err){
+          if(err.kind ==="not_found"){
+            res.status(404).send({
+                "Not Found": `O restaurante não foi encontrado.`
+            }); 
+          }
+          else{
+            res.status(500).send({
+                message:
+                err.message || "Ocorreu um erro"
+            });
+          }
+      }
+       
+      else{
+        res.status(204).send();
+      }
     });
   }
 
   exports.update=(req,res) =>{
       if(!req.body){
           res.status(400).send({
-              mesage:"Content cannot be empty!"
+              mesage:"Por favor preencha os requisitos"
           })
       }
       else{
@@ -105,9 +124,15 @@ exports.deleteAll = (req, res) => {
 
           Plate.update(req.params.idPlate,plate,(err,data)=>{
             if(err){
-                res.status(500).send({
-                    message:err.message || err
-                })
+                if(err.kind ==="not_found"){
+                    req.status(404).send({"Not found": "O prato não foi encontrado"})
+                }
+                else{
+                    res.status(500).send({
+                        message:err.message || "Occoreu um erro"
+                    })
+                }
+              
             }
             else{
                 res.status(200).send({"success":"Os dados foram atualizados com sucesso"})
