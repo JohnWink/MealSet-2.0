@@ -3,7 +3,12 @@ const Table = require("../models/table.js")
 exports.getAll = (req,res) =>{
     Table.getAll(req.params.idRestaurant,(err,data) =>{
         if(err){
-            res.status(500).send({message:err.message ||"Ocorreu um erro"})
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found": "Mesas não foram encontradas"})
+            }else{
+                res.status(500).send({message:err.message ||"Ocorreu um erro"})
+            }
+           
         }
         else{
             res.status(200).send({"success":[data]})
@@ -14,7 +19,11 @@ exports.getAll = (req,res) =>{
 exports.findById = (req,res) => {
     Table.findById = (req.params.idTable,(err,data)=>{
         if(err){
-            res.status(500).send({message:err.message || "Ocorreu um erro"})
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found": "Mesa não foi encontrada"})
+            }else{
+                res.status(500).send({message:err.message ||"Ocorreu um erro"})
+            }
         }
         else{
             res.status(200).send({"success": [data]})
@@ -65,7 +74,11 @@ exports.update = (req,res) =>{
 
         Table.update(req.params.idTable,table,(err,data)=>{
             if(err){
-                res.status(500).send({message:err.message || "Ocorreu um erro"}) 
+                if(err.kind === "not_found"){
+                    res.status(404).send({"Not found": "Mesa não foi encontrada"})
+                }else{
+                    res.status(500).send({message:err.message ||"Ocorreu um erro"})
+                }
             }
             else{
                 res.status(200).send({"success":"Os dados foram atualizados com sucesso"})
@@ -78,7 +91,11 @@ exports.update = (req,res) =>{
 exports.delete = (req,res) =>{
     Table.delete(req.params.idTable,(err,data)=>{
         if(err){
-            res.status(500).send({message:err.message || "Ocorreu um erro"})
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found": "Mesa não foi encontrada"})
+            }else{
+                res.status(500).send({message:err.message ||"Ocorreu um erro"})
+            }
         }
         else{
             res.status(204).send()
@@ -89,7 +106,11 @@ exports.delete = (req,res) =>{
 exports.deleteAll = (req,res) =>{
     Table.deleteAll(req.params.idRestaurant,(err,data)=>{
         if(err){
-            res.status(500).send({message:err.message || "Ocorreu um erro"})
+            if(err.kind === "not_found"){
+                res.status(404).send({"Not found": "Mesas não foram encontradas"})
+            }else{
+                res.status(500).send({message:err.message ||"Ocorreu um erro"})
+            }
         }
         else{
             res.status(204).send()

@@ -72,7 +72,7 @@ Restaurant.create = (newRestaurant, result) => {
 
         } else {
             console.log("Restaurante criado")
-            return result(null, res)
+            return result(null, "Restaurante criado")
         }
     })
 
@@ -117,7 +117,7 @@ Restaurant.delete = (id,result) =>{
                 }
                 else{
                     console.log("Restaurante Apagado")
-                    return result(null,"success")
+                    return result(null,"Removido com sucesso")
                 }
             })
            

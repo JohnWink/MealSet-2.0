@@ -9,7 +9,10 @@ Ingredient.getAll = result =>{
         if(err){
             console.log("Error:", err)
             result(err,null)
-        }else{
+        }else if(!res[0]){
+            result({kind:"not_found"},null)
+        }
+        else{
             result(null,res)
         }
     })

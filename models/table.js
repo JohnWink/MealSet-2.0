@@ -20,7 +20,7 @@ Table.getAll = (idRestaurant,result) =>{
             return result(err,null)
         }
         else if(!res[0]){
-            return result({kind:"not found"}, null)
+            return result({kind:"not_found"}, null)
         }else{
             return result(null, res)
         }
@@ -33,7 +33,7 @@ Table.findById = (idTable,result) =>{
             console.log("Error:", err)
             return result(err,null)
         }else if(!res[0]){
-            return result({kind:"not found"},null)
+            return result({kind:"not_found"},null)
         }else{
             return result(null,res[0])
         }
@@ -46,9 +46,6 @@ Table.create = (newTable, result)=>{
         if(err){
             console.log("Error:", err)
             return result(err,null)
-        }
-        else if(res.affectedRows == 0){
-            return result({kind:"Not Found"},null)
         }
         else{
             return result(null,"Mesa Criada")
@@ -65,7 +62,7 @@ Table.update = (idTable,newTable,result)=>{
          return result(err,null)
      }
      else if(res.affectedRows == 0){
-         return result({kind:"not found"}, null)
+         return result({kind:"not_found"}, null)
      }
      else{
          return result(null,"Mesa Atualizada")
@@ -80,7 +77,7 @@ Table.delete = (idTable,result)=>{
             return result(err,null)
         }
         else if(res.affectedRows == 0){
-            return result({kind:"not found"},null)
+            return result({kind:"not_found"},null)
         }
         else{
             return result(null,"Mesa Removida")
@@ -95,7 +92,7 @@ Table.deleteAll = (idRestaurant,result)=>{
             return result(err,null)
         }
         else if(res.affectedRows == 0){
-            return result({kind:"not found"},null)
+            return result({kind:"not_found"},null)
         }
         else{
             return result(null,"Mesa Removida")
