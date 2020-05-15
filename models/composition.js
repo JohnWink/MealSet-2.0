@@ -6,23 +6,24 @@ const Composition = function (composition) {
     this.medida = composition.measurement
 }
 
-Composition.getAll = result => {
+Composition.getAll = (idPlate,result) => {
 
-    db.con.query('SELECT * FROM Composição;', function (err, res) {
+    db.con.query('SELECT Composição.* FROM Composição INNER JOIN Prato_Composição ON Composição.idComposição = Prato_Composição.idComposição WHERE Prato_Composição.idPrato = ? GROUP BY Composição.idComposição', 
+    idPlate,function (err, res) {
         if (err) {
             console.log(err)
-            result(err, null)
-            return
+            return result(err, null)
+            
 
         }
         else if (!res[0]) {
-            result({ kind: "not_found" }, null)
+            return  result({ kind: "not_found" }, null)
         }
         else {
 
             console.log("Composições: ", res)
-            result(null, res)
-            return
+            return result(null, res)
+            
 
         }
     })
@@ -52,25 +53,47 @@ Composition.findById = (idComposition, result) => {
 
 }
 
-Composition.create = (newComposition, result) => {
-    //Preparing to add new restaurant Database
-    db.con.query("INSERT INTO Composição SET ?", newComposition, (err, res) => {
-        if (err) {
-            console.log("error:", err)
-            return result(err, null)
+Composition.create = (idPlate,newComposition, result) => {
+    db.con.query("SELECT * FROM Prato WHERE idPrato = ?", idPlate,(err,res)=>{
+        if(err){
+            console.log("error:",err)
+            return result(err,null)
+        }
+        else if(!res[0]){
+            return result({kind: "not_found"},null)
+        }
+        else{
+             //Preparing to add new composition Database
+            db.con.query("INSERT INTO Composição SET ?", newComposition, (err, res) => {
+                if (err) {
+                    console.log("error:", err)
+                    return result(err, null)
 
-        } else {
-            console.log("Composição criada")
-            return result(null, "Composição criada")
+                } else {
+                    console.log(res[0])
+                    db.con.query("INSERT INTO Prato_Composição SET idPrato = ? , idComposição = (SELECT max(idComposição) FROM Composição)",
+                     idPlate,(err,res)=>{
+                        if(err){
+                            console.log("error:", err)
+                            return result(err,null)
+                        } else{
+                            console.log("Composição criada")
+                            return result(null, "Composição criada")
+                        }
+                    })
+                  
+                }
+            })
         }
     })
+   
 
 
 }
 
 Composition.update = (idComposition, compositionInfo, result) => {
 
-    db.con.query("UPDATE Composição SET ingrediente=?, quantidade=?, medida=?, WHERE idComposição=? ",
+    db.con.query("UPDATE Composição SET ingrediente=?, quantidade=?, medida=? WHERE idComposição=? ",
         [compositionInfo.ingrediente, compositionInfo.quantidade, compositionInfo.medida, idComposition],
         (err, res) => {
             if (err) {
@@ -84,6 +107,62 @@ Composition.update = (idComposition, compositionInfo, result) => {
                 return result(null, "Composição Atualizada")
             }
         })
+}
+
+
+Composition.delete = (idComposition,result) =>{
+    db.con.query("UPDATE Composição SET ativo = 0 WHERE idComposição = ?", idComposition,(err,res)=>{
+        if(err){
+            console.log("error:", err);
+            return result(err,null)
+        }
+        else if(res.affectedRows == 0){
+            return result({kind:"not_found"},null)
+        }
+        else{
+            db.con.query("UPDATE Prato_Composição SET ativo = 0 WHERE idComposição = ?", idComposition,(err,res)=>{
+                if(err){
+                    console.log("error:", err);
+                    return result(err,null)
+                }
+                else if(res.affectedRows == 0){
+                    return result({kind:"not_found"},null)
+                }
+                else{
+                    return result(null,"Composição eliminada")
+                }
+            })
+            
+        }
+    })
+}
+
+Composition.deleteAll = (idPlate,result) =>{
+    db.con.query("UPDATE Prato_Composição SET ativo = 0 WHERE idPrato = ?", idPlate, (err,res)=>{
+        if(err){
+            console.log("error:", err);
+            return result(err,null)
+        }
+        else if(res.affectedRows == 0){
+            return result({kind:"not_found"},null)
+        }
+        else{
+            db.con.query("UPDATE Composição INNER JOIN Prato_Composição ON Composição.idComposição = Prato_Composição.idComposição SET Composição.ativo = 0 WHERE Prato_Composição.idPrato = ?;",
+            idPlate,(err,res)=>{
+                if(err){
+                    console.log("error:", err);
+                    return result(err,null)
+                }
+                else if(res.affectedRows == 0){
+                    return result({kind:"not_found"},null)
+                }
+                else{
+                    return result(null,"Composição eliminada")
+                }
+            })
+        }
+    })
+ 
 }
 
 module.exports = Composition

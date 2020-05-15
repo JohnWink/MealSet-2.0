@@ -61,7 +61,7 @@ Ingredient.create =(newIngredient,result)=>{
 }
 
 Ingredient.delete = (idIngredient,result)=>{
-    db.con.query("DELETE FROM Ingredientes WHERE nome = ?;", idIngredient, (err,res)=>{
+    db.con.query("UPDATE Ingredientes SET ativo = 0 WHERE nome = ?;", idIngredient, (err,res)=>{
         if(err){
             console.log("Error", err)
             result(err,null)

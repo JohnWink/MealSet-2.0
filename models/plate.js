@@ -75,7 +75,7 @@ Plate.create = (newPlate, result) => {
 }
 
 Plate.delete = (plateId, result) => {
-    db.con.query("DELETE FROM Prato WHERE id = ?", plateId, (err, res) => {
+    db.con.query("UPDATE Prato SET ativo = 0 WHERE id = ?", plateId, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -94,7 +94,7 @@ Plate.delete = (plateId, result) => {
 };
 
 Plate.deleteAll = (restaurantId,result) => {
-    db.con.query("DELETE FROM Prato WHERE idRestaurante = ?",restaurantId, (err, res) => {
+    db.con.query("UPDATE Prato SET ativo = 0 WHERE idRestaurante = ?",restaurantId, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return result(null, err);

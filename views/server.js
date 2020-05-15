@@ -10,10 +10,10 @@ var app = express();
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
-app.use(expressSanitized.middleware());
+//app.use(expressSanitized.middleware());
 
 
-expressSanitized.sanitizeParams(app,['idRestaurant', 'idPlate','idTable', 'idComposition'])
+//expressSanitized.sanitizeParams(app,['idRestaurant', 'idPlate','idTable', 'idComposition'])
 
 module.exports= app;
 

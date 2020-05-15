@@ -71,7 +71,7 @@ Table.update = (idTable,newTable,result)=>{
 }
 
 Table.delete = (idTable,result)=>{
-    db.con.query("DELETE FROM Mesa WHERE idMesa = ?", idTable,(err,res)=>{
+    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idMesa = ?", idTable,(err,res)=>{
         if(err){
             console.log("Error:",err)
             return result(err,null)
@@ -86,7 +86,7 @@ Table.delete = (idTable,result)=>{
 }
 
 Table.deleteAll = (idRestaurant,result)=>{
-    db.con.query("DELETE FROM Mesa WHERE idRestaurante = ?", idRestaurant,(err,res)=>{
+    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idRestaurante = ?", idRestaurant,(err,res)=>{
         if(err){
             console.log("Error:",err)
             return result(err,null)

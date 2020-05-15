@@ -15,6 +15,7 @@ const Restaurant = require("../models/restaurant.js")
             }
            
         }else{
+            res.setHeader("Content-Type","application/json; charset=utf-8")
             res.status(200).send({"success":[data]})
         }
     })

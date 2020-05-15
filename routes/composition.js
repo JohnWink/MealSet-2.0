@@ -1,11 +1,15 @@
 module.exports = app =>{
     const composition = require("../controllers/composition.js")
 
-    app.get('/composition', composition.getAll)
+    app.get('/plates/:idPlate/compositions', composition.getAll)
 
-    app.get('/composition/:idComposition', composition.findById)
+    app.get('/compositions/:idComposition', composition.findById)
 
-    app.post('/composition/', composition.create)
+    app.post('/plates/:idPlate/compositions', composition.create)
 
-    app.put('/composition/:idComposition', composition.update)
+    app.put('/compositions/:idComposition', composition.update)
+
+    app.delete('/compositions/:idComposition',composition.delete)
+
+    app.delete('/plates/:idPlate/compositions/',composition.deleteAll)
 }
