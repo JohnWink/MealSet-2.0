@@ -7,27 +7,27 @@ const Composition = function (composition) {
     this.idPrato = composition.idPlate
 }
 
-Composition.getAll = (idPlate,result) => {
+Composition.getAll = (idPlate, result) => {
 
-    db.con.query('SELECT * FROM Composição WHERE idPrato = ? AND ativo = 1', 
-    idPlate,function (err, res) {
-        if (err) {
-            console.log(err)
-            return result(err, null)
-            
+    db.con.query('SELECT * FROM Composição WHERE idPrato = ? AND ativo = 1',
+        idPlate, function (err, res) {
+            if (err) {
+                console.log(err)
+                return result(err, null)
 
-        }
-        else if (!res[0]) {
-            return  result({ kind: "not_found" }, null)
-        }
-        else {
 
-            console.log("Composições: ", res)
-            return result(null, res)
-            
+            }
+            else if (!res[0]) {
+                return result({ kind: "not_found" }, null)
+            }
+            else {
 
-        }
-    })
+                console.log("Composições: ", res)
+                return result(null, res)
+
+
+            }
+        })
 }
 
 Composition.findById = (idComposition, result) => {
@@ -55,20 +55,20 @@ Composition.findById = (idComposition, result) => {
 }
 
 Composition.create = (newComposition, result) => {
-             //Preparing to add new composition Database
-            db.con.query("INSERT INTO Composição SET ?", newComposition, (err, res) => {
-                if (err) {
-                    console.log("error:", err)
-                    return result(err, null)
+    //Preparing to add new composition Database
+    db.con.query("INSERT INTO Composição SET ?", newComposition, (err, res) => {
+        if (err) {
+            console.log("error:", err)
+            return result(err, null)
 
-                } else {
-                    console.log("Composição criada")
-                    return result(null, "Composição criada")
-               
-                }
-            })
+        } else {
+            console.log("Composição criada")
+            return result(null, "Composição criada")
+
         }
- 
+    })
+}
+
 
 Composition.update = (idComposition, compositionInfo, result) => {
 
@@ -89,38 +89,38 @@ Composition.update = (idComposition, compositionInfo, result) => {
 }
 
 
-Composition.delete = (idComposition,result) =>{
-    db.con.query("UPDATE Composição SET ativo = 0 WHERE idComposição = ? AND ativo = 1", idComposition,(err,res)=>{
-        if(err){
+Composition.delete = (idComposition, result) => {
+    db.con.query("UPDATE Composição SET ativo = 0 WHERE idComposição = ? AND ativo = 1", idComposition, (err, res) => {
+        if (err) {
             console.log("error:", err);
-            return result(err,null)
+            return result(err, null)
         }
-        else if(res.affectedRows == 0){
-            return result({kind:"not_found"},null)
+        else if (res.affectedRows == 0) {
+            return result({ kind: "not_found" }, null)
         }
-        else{
-            return result(null,"Composição eliminada")  
+        else {
+            return result(null, "Composição eliminada")
         }
     })
 }
 
-Composition.deleteAll = (idPlate,result) =>{
-            db.con.query("UPDATE Composição  SET ativo = 0 WHERE idPrato = ? AND ativo = 1;",
-            idPlate,(err,res)=>{
-                if(err){
-                    console.log("error:", err);
-                    return result(err,null)
-                }
-                else if(res.affectedRows == 0){
-                    return result({kind:"not_found"},null)
-                }
-                else{
-                    return result(null,"Composição eliminada")
-                }
-            })
-        }
-   
- 
+Composition.deleteAll = (idPlate, result) => {
+    db.con.query("UPDATE Composição  SET ativo = 0 WHERE idPrato = ? AND ativo = 1;",
+        idPlate, (err, res) => {
+            if (err) {
+                console.log("error:", err);
+                return result(err, null)
+            }
+            else if (res.affectedRows == 0) {
+                return result({ kind: "not_found" }, null)
+            }
+            else {
+                return result(null, "Composição eliminada")
+            }
+        })
+}
+
+
 
 
 module.exports = Composition
