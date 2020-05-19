@@ -13,7 +13,7 @@ const Table = function (table){
 
 //Gets all tables from restaurant
 Table.getAll = (idRestaurant,result) =>{
-    db.con.query("SELECT * FROM Mesa WHERE idRestaurante = ?", idRestaurant,(err,res) =>{
+    db.con.query("SELECT * FROM Mesa WHERE idRestaurante = ? AND ativo = 1", idRestaurant,(err,res) =>{
         if(err){
             console.log("Error:", err)
             
@@ -28,7 +28,7 @@ Table.getAll = (idRestaurant,result) =>{
 }
 
 Table.findById = (idTable,result) =>{
-    db.con.query("SELECT * FROM Mesa WHERE idMesa = ?", idTable, (err,res)=>{
+    db.con.query("SELECT * FROM Mesa WHERE idMesa = ? AND ativo = 1", idTable, (err,res)=>{
         if(err){
             console.log("Error:", err)
             return result(err,null)
@@ -54,7 +54,7 @@ Table.create = (newTable, result)=>{
 }
 
 Table.update = (idTable,newTable,result)=>{
- db.con.query("UPDATE Mesa SET nome = ?, tamanho = ?, descrição = ?, fumadores = ?, esplanada = ? WHERE idMesa = ?", 
+ db.con.query("UPDATE Mesa SET nome = ?, tamanho = ?, descrição = ?, fumadores = ?, esplanada = ? WHERE idMesa = ? AND ativo = 1", 
  [newTable.nome,newTable.tamanho,newTable.descrição,newTable.fumadores, newTable.esplanada, idTable],
  (err,res)=>{
      if(err){
@@ -71,7 +71,7 @@ Table.update = (idTable,newTable,result)=>{
 }
 
 Table.delete = (idTable,result)=>{
-    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idMesa = ?", idTable,(err,res)=>{
+    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idMesa = ? AND ativo = 1", idTable,(err,res)=>{
         if(err){
             console.log("Error:",err)
             return result(err,null)
@@ -86,7 +86,7 @@ Table.delete = (idTable,result)=>{
 }
 
 Table.deleteAll = (idRestaurant,result)=>{
-    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idRestaurante = ?", idRestaurant,(err,res)=>{
+    db.con.query("UPDATE Mesa SET ativo = 0 WHERE idRestaurante = ? AND ativo = 1", idRestaurant,(err,res)=>{
         if(err){
             console.log("Error:",err)
             return result(err,null)

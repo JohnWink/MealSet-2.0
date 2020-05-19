@@ -14,7 +14,7 @@ const Restaurant = function (restaurant) {
 // Gets All restaurants from Database
 Restaurant.getAll = result => {
 
-    db.con.query('SELECT * FROM Restaurante;', function (err, res) {
+    db.con.query('SELECT * FROM Restaurante WHERE ativo = 1;', function (err, res) {
         if (err) {
             console.log(err)
             result(err, null)
@@ -40,7 +40,7 @@ Restaurant.getAll = result => {
 Restaurant.findById = (restaurantId, result) => {
 
     //Send prepared command to Database
-    db.con.query("SELECT * FROM Restaurante WHERE idRestaurante = ?", restaurantId, (err, res) => {
+    db.con.query("SELECT * FROM Restaurante WHERE idRestaurante = ? AND ativo = 1", restaurantId, (err, res) => {
 
         // If there's any problem with the data retrieval 
         if (err) {
@@ -81,7 +81,7 @@ Restaurant.create = (newRestaurant, result) => {
 
 Restaurant.update = (id,restaurantInfo,result) =>{
 
-    db.con.query("UPDATE Restaurante SET nome=?, descrição=?, estacionamento=?, coverFoto=?, gps=?, morada=?, Codigo_postal=? WHERE idRestaurante=? ",
+    db.con.query("UPDATE Restaurante SET nome=?, descrição=?, estacionamento=?, coverFoto=?, gps=?, morada=?, Codigo_postal=? WHERE idRestaurante=? AND ativo = 1",
     [restaurantInfo.nome, restaurantInfo.descrição, restaurantInfo.estacionamento, restaurantInfo.coverFoto,restaurantInfo.gps, restaurantInfo.morada,restaurantInfo.Codigo_postal,id],
     (err,res)=>{
         if(err){
@@ -98,16 +98,8 @@ Restaurant.update = (id,restaurantInfo,result) =>{
 }
 
 Restaurant.delete = (id,result) =>{
-    //First we delete all the dishes that belong to the restaurant we're doing to delete. 
-    db.con.query("UPDATE Prato SET ativo = 0 WHERE idRestaurante = ?",id,(err,res)=>{
-        if(err){
-            console.log("error:", err);
-            return result(err,null)
-        }
     
-        else{
-            //Only after all of the plates are deleted, we can perform the delete of the restaurant
-            db.con.query("UPDATE Restaurante SET ativo = 0 WHERE idRestaurante = ?",id,(err,res)=>{
+            db.con.query("UPDATE Restaurante SET ativo = 0 WHERE idRestaurante = ? AND ativo = 1",id,(err,res)=>{
                 if(err){
                     console.log("error:", err);
                    return  result(err,null)
@@ -120,10 +112,6 @@ Restaurant.delete = (id,result) =>{
                     return result(null,"Removido com sucesso")
                 }
             })
-           
-        }
-    })
-    
 }
 
 module.exports = Restaurant

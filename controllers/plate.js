@@ -70,8 +70,11 @@ exports.create = (req, res) => {
                     message: err.message || "Ocorreu um erro"
                 })
             }
-            console.log("Sucesso na criação do prato")
-            res.status(201).send({ "success": "Prato criado" })
+            else{
+                console.log("Sucesso na criação do prato")
+                res.status(201).send({ "success": "Prato criado" })
+            }
+    
 
         })
     }
@@ -89,7 +92,9 @@ exports.delete = (req, res) => {
                     message: err.message || "Ocorreu um erro"
                 });
             }
-        } else res.status(204).send();
+        }else{
+             res.status(204).send();
+        } 
     });
 };
 
@@ -110,6 +115,7 @@ exports.deleteAll = (req, res) => {
       }
        
       else{
+        console.log(data)
         res.status(204).send();
       }
     });
@@ -132,7 +138,7 @@ exports.deleteAll = (req, res) => {
           Plate.update(req.params.idPlate,plate,(err,data)=>{
             if(err){
                 if(err.kind ==="not_found"){
-                    req.status(404).send({"Not found": "O prato não foi encontrado"})
+                    res.status(404).send({"Not found": "O prato não foi encontrado"})
                 }
                 else{
                     res.status(500).send({

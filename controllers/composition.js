@@ -49,7 +49,8 @@ exports.create = (req, res) => {
         const composition = new Composition({
             ingredient: req.body.ingredient,
             quantity: req.body.quantity,
-            measurement: req.body.measurement
+            measurement: req.body.measurement,
+            idPlate: req.params.idPlate
         })
         //Check if the ingredient already exists
         Ingredient.findById(req.body.ingredient,(err,data) =>{
@@ -69,7 +70,7 @@ exports.create = (req, res) => {
                         // If the ingredient is created, create the composition
                         else{
                             //Save composition in the database
-                            Composition.create(req.params.idPlate,composition, (err, data) => {
+                            Composition.create(composition, (err, data) => {
                                 if (err) {
                                     console.log("error catched")
                                     res.status(500).send({
@@ -93,7 +94,7 @@ exports.create = (req, res) => {
             // if there's no errors and the ingredient already exists, create composition
             else{
                 //Save composition in the database
-                Composition.create(req.params.idPlate,composition, (err, data) => {
+                Composition.create(composition, (err, data) => {
                     if (err) {
                         console.log("error catched")
                         res.status(500).send({

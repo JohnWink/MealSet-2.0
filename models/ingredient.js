@@ -5,7 +5,7 @@ const Ingredient = function(ingredient){
 };
 
 Ingredient.getAll = result =>{
-    db.con.query("SELECT * FROM Ingredientes;",(err,res)=>{
+    db.con.query("SELECT * FROM Ingredientes WHERE ativo = 1;",(err,res)=>{
         if(err){
             console.log("Error:", err)
             result(err,null)
@@ -19,7 +19,7 @@ Ingredient.getAll = result =>{
 }
 
 Ingredient.findById = (idIngredient,result) =>{
-    db.con.query("SELECT * FROM Ingredientes WHERE nome = ?;", idIngredient,(err,res)=>{
+    db.con.query("SELECT * FROM Ingredientes WHERE nome = ? AND ativo = 1;", idIngredient,(err,res)=>{
         if(err){
             console.log("Error:",err)
             result(err,null)
@@ -34,18 +34,45 @@ Ingredient.findById = (idIngredient,result) =>{
 }
 
 Ingredient.update =(idIngredient, newId, result) =>{
-    db.con.query("UPDATE Ingredientes SET nome = ? WHERE nome = ?;",[newId, idIngredient],(err,res)=>{
+    //Looking if there's any deleted that already exists
+    db.con.query("SELECT * FROM Ingredientes WHERE nome = ? AND ativo = 0",newId,(err,res)=>{
         if(err){
-            console.log("Error:",err)
+            console.log("Error:", err)
             result(err,null)
         }
-        else if(res.affectedRows == 0){
-            result({kind:"not_found"},null)
+        else if(!res[0]){
+            //Updates an aleady existing ingredient with the new name
+            db.con.query("UPDATE Ingredientes SET nome = ? WHERE nome = ? AND ativo = 1;",[newId, idIngredient],(err,res)=>{
+                if(err){
+                    console.log("Error:",err)
+                    result(err,null)
+                }
+                else if(res.affectedRows == 0){
+                    result({kind:"not_found"},null)
+                }
+                else{
+                    result(null,"Atualizado com sucesso")
+                }
+            })
         }
         else{
-            result(null,"Atualizado com sucesso")
+            //Recycles the deleted Ingredient
+            db.con.query("UPDATE Ingredientes SET ativo = 1 WHERE nome = ?", newId,(err,res)=>{
+                if(err){
+                    console.log("Error:",err)
+                    result(err,null)
+                }
+                else if(res.affectedRows == 0){
+                    result({kind:"not_found"},null)
+                }
+                else{
+                    result(null,"Atualizado com sucesso")
+                }
+                
+            })
         }
     })
+ 
 }
 
 Ingredient.create =(newIngredient,result)=>{
@@ -61,7 +88,7 @@ Ingredient.create =(newIngredient,result)=>{
 }
 
 Ingredient.delete = (idIngredient,result)=>{
-    db.con.query("UPDATE Ingredientes SET ativo = 0 WHERE nome = ?;", idIngredient, (err,res)=>{
+    db.con.query("UPDATE Ingredientes SET ativo = 0 WHERE nome = ? AND ativo = 1;", idIngredient, (err,res)=>{
         if(err){
             console.log("Error", err)
             result(err,null)

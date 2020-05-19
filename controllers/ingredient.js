@@ -38,20 +38,35 @@ exports.update = (req, res) => {
         res.status(400).send({ message: "Content cannot be empty" })
     }
     else {
-        Ingredient.update(req.params.idIngredient, req.body.name, (err, data) => {
-            if (err) {
-                if (err.kind === "not_found") {
-                    res.status(404).send({ "Not found": "O ingrediente não foi encontrado" })
-                } else {
+        Ingredient.findById(req.body.name,(err,data)=>{
+            if(err){
+                // If there's no existing Ingredient with the updated name.
+                if(err.kind==="not_found"){
+                    // Begin the update
+                    Ingredient.update(req.params.idIngredient, req.body.name, (err, data) => {
+                        if (err) {
+                            if (err.kind === "not_found") {
+                                res.status(404).send({ "Not found": "O ingrediente não foi encontrado" })
+                            } else {
+                                res.status(500).send({
+                                    message: err.message || "Ocorreu um erro"
+                                })
+                            }
+                        }
+                        else {
+                            res.status(200).send({ "success": "O ingrediente foi atualizado com sucesso" })
+                        }
+                    })
+                }else{
                     res.status(500).send({
                         message: err.message || "Ocorreu um erro"
                     })
                 }
-            }
-            else {
-                res.status(200).send({ "success": "O ingrediente foi atualizado com sucesso" })
+            }else{
+                res.status(409).send({"Conflict" : "O ingrediente já existe"})
             }
         })
+     
     }
 }
 
@@ -60,16 +75,29 @@ exports.create = (req, res) => {
         res.status(400).send({ message: "Por favor preencha os requisitos" })
     }
     else {
-        Ingredient.create(req.body.name, (err, data) => {
-            if (err) {
-                res.status(500).send({
-                    message: err.message || err
-                })
-            }
-            else {
-                res.status(201).send({ "success": "O ingrediente foi criado com sucesso" })
+        Ingredient.findById(req.body.name,(err,data)=>{
+            if(err){
+                if(err.kind ==="not_found"){
+                    Ingredient.create(req.body.name, (err, data) => {
+                        if (err) {
+                            res.status(500).send({
+                                message: err.message || err
+                            })
+                        }
+                        else {
+                            res.status(201).send({ "success": "O ingrediente foi criado com sucesso" })
+                        }
+                    })
+                }else{
+                    res.status(500).send({
+                        message: err.message || err
+                    })
+                }
+            }else{
+                res.status(409).send({"Conflict" : "O ingrediente já existe"})
             }
         })
+       
     }
 }
 

@@ -36,7 +36,7 @@ Plate.getAll = result => {
 Plate.findById = (plateId, result) => {
     console.log("ID DO PRATO: " + plateId)
     //Send prepared command to Database
-    db.con.query("SELECT * FROM Prato WHERE idPrato = ?", plateId, (err, res) => {
+    db.con.query("SELECT * FROM Prato WHERE idPrato = ? AND ativo = 1", plateId, (err, res) => {
 
         // If there's any problem with the data retrieval 
         if (err) {
@@ -75,7 +75,7 @@ Plate.create = (newPlate, result) => {
 }
 
 Plate.delete = (plateId, result) => {
-    db.con.query("UPDATE Prato SET ativo = 0 WHERE id = ?", plateId, (err, res) => {
+    db.con.query("UPDATE Prato SET ativo = 0 WHERE id = ? AND ativo = 1", plateId, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -94,7 +94,7 @@ Plate.delete = (plateId, result) => {
 };
 
 Plate.deleteAll = (restaurantId,result) => {
-    db.con.query("UPDATE Prato SET ativo = 0 WHERE idRestaurante = ?",restaurantId, (err, res) => {
+    db.con.query("UPDATE Prato SET ativo = 0 WHERE idRestaurante = ? AND ativo = 1",restaurantId, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return result(null, err);
@@ -113,7 +113,7 @@ Plate.deleteAll = (restaurantId,result) => {
   };
 
   Plate.update=(id, plate,result)=>{
-      db.con.query("UPDATE Prato SET nome=?,descrição=?,preço=?,foto=? WHERE idPrato = ?",
+      db.con.query("UPDATE Prato SET nome=?,descrição=?,preço=?,foto=? WHERE idPrato = ? AND ativo = 1",
       [plate.nome, plate.descrição, plate.preço,plate.foto,id],
       (err,res)=>{
           if(err){
