@@ -94,13 +94,99 @@ exports.create = (req,res) => {
 }
 
 exports.update = (req,res) =>{
+    if(!req.body){
+        req.status(400).send({
+            message:"Por favor preencha os requisitos"
+        })
+    }else{
+        const reservation = new Reservation({
+            time:req.body.time,
+            name:req.body.name,
+            n_people:req.body.n_people,
+        })
 
+        Reservation.update(req.params.idReservation,reservation,(err,data)=>{
+            if (err) {
+
+                if(err.kind === "not_found"){
+                    res.status(404).send({
+                        "Not Found": `Nenhuma reserva foi encontrada`
+                    }); 
+                }
+                else{
+                    res.status(500).send({
+                        message: err.message || "Ocorreu um erro"
+                    })
+                }
+    
+            } else {
+                res.status(200).send({"success":"A alteração foi atualizada com sucesso!"})
+            }
+        })
+    }
+}
+
+exports.confirm = (req,res) =>{
+    Reservation.confirm(req.params.idReservation,(err,data)=>{
+        if (err) {
+
+            if(err.kind === "not_found"){
+                res.status(404).send({
+                    "Not Found": `Nenhuma reserva foi encontrada`
+                }); 
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
+
+        } else {
+            res.status(200).send({"Success" : "A reserva foi confirmada"})
+        }
+    })
 }
 
 exports.deleteById = (req,res) =>{
+    Reservation.deleteById(req.params.idReservation,(err,data)=>{
+        if (err) {
 
+            if(err.kind === "not_found"){
+                res.status(404).send({
+                    "Not Found": `Nenhuma reserva foi encontrada`
+                }); 
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
+
+        } else {
+            res.status(204).send()
+        }
+    })
 }
 
 exports.deleteByRestaurant = (req,res) =>{
 
+    Reservation.deleteByRestaurant(req.params.idRestaurant,(err,data)=>{
+        if (err) {
+
+            if(err.kind === "not_found"){
+                res.status(404).send({
+                    "Not Found": `Nenhuma reserva foi encontrada`
+                }); 
+            }
+            else{
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro"
+                })
+            }
+
+        } else {
+            res.status(204).send()
+        }
+    })
 }
+

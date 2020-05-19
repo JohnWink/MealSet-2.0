@@ -12,6 +12,8 @@ module.exports = app =>{
 
     app.put('/reservations/:idReservation', reservation.update)
 
+    app.put('/reservations/:idReservation/confirm',reservation.confirm)
+
     app.delete('/reservations/:idReservation', reservation.deleteById)
 
     app.delete('/restaurants/:idRestaurant/reservations', reservation.deleteByRestaurant)

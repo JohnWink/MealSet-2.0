@@ -51,6 +51,7 @@ require("../routes/plate.js")(app)
 require("../routes/table.js")(app)
 require("../routes/ingredient.js")(app)
 require("../routes/composition")(app)
+require("../routes/reservation")(app)
 
 app.listen(3000,function(){
     console.log("Server running at http://127.0.0:3000/")

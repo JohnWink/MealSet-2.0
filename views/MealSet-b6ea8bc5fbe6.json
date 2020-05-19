@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mealset-1579630397236",
+  "private_key_id": "b6ea8bc5fbe65f40e3789c0c7a81d29955e4c0df",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDXTHHh18RhJQtT\n8uo9zHvrbrtrp1Tzr+eZneC8Se1UaTyYjZ5LIGbf8ofrfmhVsR6sDLoaLZu0WIG3\nIGi60gPfsj17gzWYwmrs5cLHpaChyv87TddZBTdqP7TNCcE+E9ORIr3rXPASMCLQ\nPD96EbWzsQ+K59Q9k9zrTqB1RIMr5OpBkKGt/upblM0sLYpMXiSgESjwh5LXCC3E\nSTC7q5QXySnUsWqNrVo7BmnlOdHoOJ5ymt3qaHxR0Cs5Gs7WCa0/iup2yZ1urPgj\n8f9Se10T3DkV6x2tYJ8bl74woHaNWv3zl1jSU9+OfpFw5UvBQxcfH2QAvadKVIQo\nT4asuKfXAgMBAAECggEACmO22gUqGAKVV1wIIk9Qs5AR09s/CoSQAEqa9N+yHsxk\nIaB6wQuhPYzJxTIK/SwzyUkb8NEsVPB6vWz/PD3ZGW/TpgAzN+w535C1tdiv/t7C\n6b8lUO4jOimikMy3/thTOsIIb57nqAa/x1QliJrFCRTWk3UmOa8QILLO7SwPN0M9\nwH/ZFmMrX14ZRjF+M4OUX4y2iTDPKDS35EZk8hnHnnsqAo7UBl/gvCaU/SO3s+qR\nL9Z/KmZcwOi7HE50/1KNjBU7EfE71e5L4c5NAgAebYYVwGN0KRbVc9Knhx3TPuaR\n+IMgot7/OVxz6dDMZzkkIOJDPILInBnny4Q53gLmUQKBgQDyJqV8iYQn3vLS2fI5\nOvIwu5Zagt5hK/n+Fn+ZDhqlrI795Zt7EMek2ceaSmPYKyI0+JRcUA8B+RQ+M1jY\nDgYACIa9SYT/HXzXRzrH9UCOJ4gKTH+SLD09LBbl2/+B9VzWQ2tjLPGxzuCatFBi\n8v7kpqJzNAVgDcci/gjmZ4S5PQKBgQDjnKaa47OIzyv/emlmuf5n+KbPtUtEgSKT\nsed3lT8a8QzBYlr+Zn6VwxWZBeIAzI+sa+uHDs/1xLxXL9yj6N5wqVe8YX0jIzMU\nqmXy/2EG2gQ4QQIVq930rHKU4sEYwLxJTCvd2Qi8gnh2lnS4mx8tDogf6uBt/wmJ\nhf+aywDuowKBgQCIVlAIXVjGJhXrt4BUzqZ737JYxaQ1a9A2Si6PW0yPiSd9NmCj\nGqB9ZYynh0jN9gMtdeP6Ua0RfE70cm6MPuEL9cD/JDy4cr7OarFi0egF4aYLvmR5\nRWU5YvCFfKdQYXhivtTgovZ2GTeGgw1bmNsAm/2NBXYdTcSYJBWYvCITNQKBgB1O\nMA1FP/pfYjTUl/mH/P95/lBD8VrynXcSstCswKFBY/kKJtkWbTnvEjrPjRe5Ps5e\nXsbW22OzXuSC3w+jjfBHfWpdyvTZNVx1zAaLZvyw2VY82H3d0QgNo/sTbvU264cs\nbYF0zjEnQ0dRe9nA7zSn6FLjtN20to+kVxKhDI+tAoGAK7W5roDJqEFsNNQaF9iP\nvTGHq4B3K3Vc5LI6SyzMyMpRBWp4wab/GZekEOHTmZ+DyRDalEofGi3QIB8Pni7u\n71dwD8d9UjDHwIzCRvTOjU6VNmpty2PmvAGGEJLfJexnsv6xS/SQsS7mPvt0LwXj\nfry/gkE4xn7MI2kRptLAtOE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "reservation-notification@mealset-1579630397236.iam.gserviceaccount.com",
+  "client_id": "113697897258681561973",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/reservation-notification%40mealset-1579630397236.iam.gserviceaccount.com"
+}
