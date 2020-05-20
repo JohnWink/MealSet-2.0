@@ -1,5 +1,5 @@
 const db = require("./db")
-
+/* 
 const Comment = function(ingredient){
     this.nome = ingredient.name
 };
@@ -17,3 +17,5 @@ Ingredient.getAll = result =>{
         }
     })
 }
+
+*/

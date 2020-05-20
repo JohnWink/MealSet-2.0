@@ -7,7 +7,7 @@ exports.getAll = (req, res) => {
         if (err) {
             if(err.kind === "not_found"){
                 res.status(404).send({
-                    "Not Found": `Nenhum prato não foi encontrado.`
+                    "Not Found": `Nenhum prato foi encontrado.`
                 }); 
             }
             else{
@@ -142,7 +142,7 @@ exports.deleteAll = (req, res) => {
                 }
                 else{
                     res.status(500).send({
-                        message:err.message || "Occoreu um erro"
+                        message:err.message || "Ocorreu um erro"
                     })
                 }
               

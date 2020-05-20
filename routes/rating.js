@@ -5,7 +5,7 @@ module.exports = app =>{
 
     app.get('/restaurants/:idRestaurant/ratings', rating.findByRestaurant)
 
-    app.post('/restaurantes/:idRestaurant/ratins', rating.create)
+    app.post('/restaurantes/:idRestaurant/ratings', rating.create)
 
     /*app.put('/compositions/:idComposition', composition.update)
 

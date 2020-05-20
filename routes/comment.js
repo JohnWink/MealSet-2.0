@@ -1,5 +1,5 @@
 module.exports = app =>{
-    const comment = require("../controllers/comment.js")
+    //const comment = require("../controllers/comment.js")
 
     /*app.get('/comments', comments.getAll)
 
