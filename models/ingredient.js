@@ -1,4 +1,4 @@
-const db = require("./db")
+const db = require("../db")
 
 const Ingredient = function(ingredient){
     this.nome = ingredient.name

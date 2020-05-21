@@ -1,4 +1,4 @@
-const db = require("./db")
+const db = require("../db")
 
 const Rating = function(rating) {
     this.estrelas = rating.value
