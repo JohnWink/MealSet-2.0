@@ -46,27 +46,15 @@ admin.initializeApp({
 module.exports= app;
 
 
-<<<<<<< HEAD:views/server.js
-require("../routes/restaurant.js")(app)
-require("../routes/plate.js")(app)
-require("../routes/table.js")(app)
-require("../routes/ingredient.js")(app)
-require("../routes/composition.js")(app)
-require("../routes/reservation")(app)
-require("../routes/plate_rating.js")(app)
-require("../routes/restaurant_rating.js")(app)
-=======
 require("./routes/restaurant.js")(app)
 require("./routes/plate.js")(app)
 require("./routes/table.js")(app)
 require("./routes/ingredient.js")(app)
 require("./routes/composition.js")(app)
-require("./routes/rating.js")(app)
-//require("../routes/comment.js")(app)
+require("./routes/restaurant_rating.js")(app)
 require("./routes/reservation")(app)
 require("./routes/plate_rating.js")(app)
 require("./routes/dayMeal.js")(app)
->>>>>>> 23d07611e2888be1e0c7a2cd62f79778678d5afc:server.js
 
 app.listen(3000,function(){
     console.log("Server running at http://127.0.0:3000/")
