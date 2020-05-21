@@ -1,4 +1,4 @@
-const db = require("./db")
+const db = require("../db")
 
 const Reservation = function(reservation){
     this.idCliente = reservation.idClient
