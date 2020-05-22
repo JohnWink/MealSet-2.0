@@ -4,8 +4,11 @@ var bodyParser = require("body-parser");
 var admin = require('firebase-admin');
 var serviceAccount = require("./mealset-1579630397236-firebase-adminsdk-qcgpv-dd5a66335d.json")
 const {Storage} = require('@google-cloud/storage');
-
+const bcrypt = require("bcrypt")
+const passport = require("passport")
 const db = require("./db");
+
+
 
 var app = express();
 
