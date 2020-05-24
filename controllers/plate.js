@@ -1,5 +1,5 @@
 const Plate = require("../models/plate.js")
-
+const db = require("../db")
 
 exports.getAll = (req, res) => {
     Plate.getAll((err, data) => {
@@ -24,7 +24,10 @@ exports.getAll = (req, res) => {
 
 
 exports.findById = (req, res) => {
-    Plate.findById(req.params.idPlate, (err, data) => {
+
+    const idPlate = req.params.idPlate
+
+    Plate.findById(idPlate, (err, data) => {
         if (err) {
             if(err.kind === "not_found"){
                 res.status(404).send({
@@ -53,13 +56,20 @@ exports.create = (req, res) => {
         })
     }
     else {
+
+        const name = db.con.escape(req.body.name)
+        const description = db.con.escape(req.body.description)
+        const price = req.body.price
+        const foto = req.body.foto
+        const idRestaurant = req.params.idRestaurant
+
         //Create Plate
         const plate = new Plate({
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            foto: req.body.foto,
-            idRestaurant: req.params.idRestaurant
+            name: name,
+            description: description,
+            price: price,
+            foto: foto,
+            idRestaurant: idRestaurant
         })
 
         //Save Plate in the database
@@ -81,7 +91,10 @@ exports.create = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Plate.delete(req.params.idPlate, (err, data) => {
+
+    const idPlate = req.params.idPlate
+
+    Plate.delete(idPlate, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -99,6 +112,9 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
+
+    const idRestaurant = req.params.idRestaurant
+
     Plate.deleteAll(req.params.idRestaurant,(err, data) => {
       if (err){
           if(err.kind ==="not_found"){
@@ -128,14 +144,21 @@ exports.deleteAll = (req, res) => {
           })
       }
       else{
+
+        const name = db.con.escape(req.body.name)
+        const description = db.con.escape(req.body.description)
+        const price = req.body.price
+        const foto = req.body.foto
+        const idPlate = req.params.idPlate
+
           const plate = new Plate({
-              name:req.body.name,
-              description: req.body.description,
-              price: req.body.price,
-              foto: req.body.photo
+              name:name,
+              description: description,
+              price: price,
+              foto: foto
           })
 
-          Plate.update(req.params.idPlate,plate,(err,data)=>{
+          Plate.update(idPlate,plate,(err,data)=>{
             if(err){
                 if(err.kind ==="not_found"){
                     res.status(404).send({"Not found": "O prato não foi encontrado"})

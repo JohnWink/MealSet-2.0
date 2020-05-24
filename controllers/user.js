@@ -3,10 +3,14 @@ const bcrypt = require("bcrypt");
 var config = require('../config');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer')
+const db = require("../db")
 
 
 exports.findById = (req,res) =>{
-    User.findById(req.params.idUser,(err,data)=>{
+
+    const idUser = req.params.idUser
+
+    User.findById(idUser,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "User não foi encontrado"})
@@ -35,16 +39,64 @@ exports.findAll = (req,res) =>{
     })
 }
 
+function sendSignUpMail(res,email){
+            
+    User.getLastId((err,data)=>{
+        if(err){
+            if(err.kind==="not_found"){
+                idUser = 0
+            }else{
+                res.status(500).send({message:err.message || "Ocorreu um erro"})
+            }
+        }else{
+
+            idUser = data[0].idUser
+            console.log(idUser)
+            // If no errors or conflicts are encountered:
+            var token = jwt.sign({id:idUser}, config.secret, {
+                expiresIn: new Date().getTime() +  10 * 60 * 1000 // expires in 10 min
+            });
+
+            var transporter = nodemailer.createTransport({
+                service:'gmail',
+                auth:{
+                    user:'devjohnwink@gmail.com',
+                    pass:'googleSiOl920092.'
+                }
+            })
+
+            var mailOptions = {
+                from:'devjohnwink@gmail.com',
+                to:email,
+                subject:"Registo MealSet",
+                html:'<h1>Obrigado registar no MealSet! Por favor confirme a sua conta clicando no link abaixo!</h1><a href="http://localhost:3000/confirm/'+token+'"><H2>Clique aqui!</H2></a>'
+            }
+
+            transporter.sendMail(mailOptions,function(err,info){
+                if(err){
+                    console.log(err);
+                    res.status(500).send({message:err.message || "Ocorreu um erro"})
+                }else{
+                    console.log('Message sent: ' + info.response);
+                    return res.status(200).send({"success": "Registo feito! Por favor verifique o seu email para confirmar a sua conta."});
+                }
+            })
+        
+        }
+    })
+}
+
+
 exports.signUp = (req,res)=>{
     
     if(!req.body){
         res.status(400).send({message:"Content cannot be empty"})
     }else{
-        const username = req.body.username
+        const username = db.con.escape(req.body.username)
         const email = req.body.email
         const contact = req.body.contact
         const password = req.body.password
-        const userType = req.body.userType
+        const userType = db.con.escape(req.body.userType)
 
         let idUser = 0
 
@@ -66,7 +118,9 @@ exports.signUp = (req,res)=>{
                                 return res.status(500).send({message:err.message || "Ocorreu um erro"})
                             }
                   
-                         return
+                            else{
+                                sendSignUpMail(res,email)
+                            }
                            
                         })
                         
@@ -116,7 +170,9 @@ exports.signUp = (req,res)=>{
                             }
                             */
                      
-                           return 
+                           else{
+                            sendSignUpMail(res,email)
+                           } 
                            
                         })
                     })
@@ -134,59 +190,10 @@ exports.signUp = (req,res)=>{
             
 
         })
-
-        User.getLastId((err,data)=>{
-            if(err){
-                if(err.kind==="not_found"){
-                    idUser = 0
-                }else{
-                    res.status(500).send({message:err.message || "Ocorreu um erro"})
-                }
-            }else{
-
-                 idUser = data[0].idUser + 1
-                 console.log(idUser)
-                // If no errors or conflicts are encountered:
-                var token = jwt.sign({id:idUser}, config.secret, {
-                    expiresIn: new Date().getTime() +  10 * 60 * 1000 // expires in 10 min
-                });
-
-                var transporter = nodemailer.createTransport({
-                    service:'gmail',
-                    auth:{
-                        user:'devjohnwink@gmail.com',
-                        pass:'googleSiOl920092.'
-                    }
-                })
-
-                var mailOptions = {
-                    from:'devjohnwink@gmail.com',
-                    to:email,
-                    subject:"Registo MealSet",
-                    html:'<h1>Obrigado registar no MealSet! Por favor confirme a sua conta clicando no link abaixo!</h1><a href="http://localhost:3000/confirm/'+token+'"><H2>Clique aqui!</H2></a>'
-                }
-
-                transporter.sendMail(mailOptions,function(err,info){
-                    if(err){
-                        console.log(err);
-                        res.status(500).send({message:err.message || "Ocorreu um erro"})
-                    }else{
-                        console.log('Message sent: ' + info.response);
-                        return res.status(200).send({"success": "Registo feito! Por favor verifique o seu email para confirmar a sua conta."});
-                    }
-                })
-            
-            }
-        })
-
-       
-      
     }
-
-    
-
-  
 }
+
+
 
 
 exports.verifyToken = (req,res,next)=>{
@@ -199,7 +206,7 @@ exports.verifyToken = (req,res,next)=>{
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         
       // if everything good, save to request for use in other routes
-      req.userId = decoded.id;
+      req.idUser = decoded.id;
       next();
     });
 }
@@ -208,6 +215,7 @@ exports.verifyToken = (req,res,next)=>{
 
 
 exports.confirm = (req,res) =>{
+    
     var token = req.params.token
 
     var data = jwt.decode(token,config.secret);
@@ -242,8 +250,8 @@ exports.confirm = (req,res) =>{
 
 exports.login = (req,res) =>{
 
-    const username = req.body.username
-    const password = req.body.password
+    const username = db.con.escape(req.body.username)
+    const password = db.con.escape(req.body.password)
 
     
         User.findAll((err,data)=>{
@@ -290,8 +298,8 @@ exports.update = (req,res) =>{
     else{
         const contact = req.body.contact;
         const avatar = req.body.avatar;
-        const diet = req.body.diet;
-    
+        const diet = db.con.escape(req.body.diet);
+        const idUser = req.params.idUser
 
         let user={
             contact:contact,
@@ -299,7 +307,7 @@ exports.update = (req,res) =>{
             diet: diet
         }
             
-        User.update(user,req.params.idUser,(err,data)=>{
+        User.update(user,idUser,(err,data)=>{
             if(err){
                 if(err.kind === "not_found"){
 
@@ -324,8 +332,8 @@ exports.newPassword = (req,res)=>{
         res.status(400).send({message:"Content cannot be empty"})
     }else{
         const idUser = req.params.idUser
-        const password = req.body.password
-        const newPassword = req.body.newPassword
+        const password = db.con.escape(req.body.password)
+        const newPassword = db.con.escape(req.body.newPassword)
         let email = ""
 
 
@@ -370,7 +378,7 @@ exports.newPassword = (req,res)=>{
                         from:'devjohnwink@gmail.com',
                         to:email,
                         subject:"Confirmar nova password",
-                        html:'<h1>Por favor confirme a sua nova password clicando no link abaixo!</h1><a href="http://localhost:3000/confirm/'+token+'/'+password+'"><H2>Clique aqui!</H2></a>'
+                        html:'<h1>Por favor confirme a sua nova password clicando no link abaixo!</h1><a href="http://localhost:3000/confirm/'+token+'/'+newPassword+'"><H2>Clique aqui!</H2></a>'
                     }
             
                     transporter.sendMail(mailOptions,function(err,info){
@@ -397,7 +405,7 @@ exports.newPassword = (req,res)=>{
 exports.passwordUpdate = (req,res) =>{
 
     const token = req.params.token
-    const password = req.params.password
+    const password = db.con.escape(req.params.password)
 
     var data = jwt.decode(token,config.secret);
 

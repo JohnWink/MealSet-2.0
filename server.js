@@ -1,10 +1,9 @@
 var express = require("express");
 //var expressSanitized = require("express-sanitize-escape")
 var bodyParser = require("body-parser");
-var admin = require('firebase-admin');
-var serviceAccount = require("./mealset-1579630397236-firebase-adminsdk-qcgpv-dd5a66335d.json")
-const {Storage} = require('@google-cloud/storage');
-var passport  = require('passport');
+//var admin = require('firebase-admin');
+//var serviceAccount = require("./mealset-1579630397236-firebase-adminsdk-qcgpv-dd5a66335d.json")
+//const {Storage} = require('@google-cloud/storage');
 var session = require('express-session')
 const db = require("./db");
 

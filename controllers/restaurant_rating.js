@@ -1,4 +1,5 @@
 const Rating = require("../models/restaurant_rating.js")
+const db = require("../db")
 
 exports.getAll = (req, res) => {
     Rating.getAll((err, data) => {
@@ -22,7 +23,10 @@ exports.getAll = (req, res) => {
 
 exports.findById = (req, res) => {
 
-    Rating.findById(req.params.idRestaurant, req.params.idUser, (err, data) => {
+    const idRestaurant = req.params.idRestaurant
+    const idUser = req.params.idUser
+    
+    Rating.findById(idRestaurant, idUser, (err, data) => {
 
         if (err) {
             if (err.kind === "not_found") {
@@ -44,7 +48,10 @@ exports.findById = (req, res) => {
 
 
 exports.findByUser = (req, res) => {
-    Rating.findByUser(req.params.idUser, (err, data) => {
+
+    const idUser = req.params.idUser
+
+    Rating.findByUser(idUser, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -64,7 +71,10 @@ exports.findByUser = (req, res) => {
 }
 
 exports.findByRestaurant = (req, res) => {
-    Rating.findByRestaurant(req.params.idRestaurant, (err, data) => {
+
+    const idRestaurant = req.params.idRestaurant
+
+    Rating.findByRestaurant(idRestaurant, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Ratings não encontrados" })
@@ -91,18 +101,24 @@ exports.create = (req, res) => {
 
     else {
 
+        const idRestaurant = req.params.idRestaurant
+        const idUser = req.params.idUser
+        const value = req.body.rating
+        const comment = db.con.escape(req.body.comment)
+        const dateTime =req.body.dateTime
+
         // Check if the Rating already exists
-        Rating.findById(req.params.idRestaurant, req.params.idUser, (err, data) => {
+        Rating.findById(idRestaurant,idUser, (err, data) => {
             if (err) {
                 // if the rating doesn't exist yet
                 if (err.kind === "not_found") {
 
                     const rating = new Rating({
-                        idRestaurant: req.params.idRestaurant,
-                        idUser: req.params.idUser,
-                        rating: req.body.rating,
-                        comment: req.body.comment,
-                        dateTime: req.body.dateTime
+                        idRestaurant: idRestaurant,
+                        idUser: idUser,
+                        rating: value,
+                        comment: comment,
+                        dateTime: dateTime
                     })
 
                     // Create Rating
@@ -143,7 +159,7 @@ exports.update = (req, res) => {
     }
     else {
         const rating = req.body.rating;
-        const comment = req.body.comment;
+        const comment = db.con.escape(req.body.comment);
         const dateTime = req.body.dateTime;
         const idRestaurant = req.params.idRestaurant;
         const idUser = req.params.idUser;
@@ -175,6 +191,7 @@ exports.update = (req, res) => {
 
 
 exports.delete = (req, res) => {
+
     const idRestaurant = req.params.idRestaurant;
     const idUser = req.params.idUser;
 
@@ -196,7 +213,9 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteByUser = (req, res) => {
+
     const idUser = req.params.idUser
+    
     Rating.deleteByUser(idUser, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {

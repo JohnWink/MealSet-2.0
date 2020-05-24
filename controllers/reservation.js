@@ -1,8 +1,11 @@
 const Reservation = require("../models/reservation.js")
-
+const db = require("../db")
 
 exports.findById = (req,res) => {
-    Reservation.findById(req.params.idReservation,(err,data)=>{
+
+    const idReservation = req.params.idReservation
+
+    Reservation.findById(idReservation,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){
@@ -23,7 +26,10 @@ exports.findById = (req,res) => {
 }
 
 exports.findByRestaurant = (req,res) => {
-    Reservation.findByRestaurant(req.params.idRestaurant,(err,data)=>{
+
+    const idRestaurant = req.params.idRestaurant
+
+    Reservation.findByRestaurant(idRestaurant,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){
@@ -44,7 +50,10 @@ exports.findByRestaurant = (req,res) => {
 }
 
 exports.findByUser = (req,res) => {
-    Reservation.findByUser(req.params.idUser,(err,data)=>{
+
+    const idUser = req.params.idUser
+
+    Reservation.findByUser(idUser,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){
@@ -70,12 +79,18 @@ exports.create = (req,res) => {
             message:"Por favor preencha os requisitos"
         })
     }else{
+        const idClient = req.params.idUser
+        const idTable = req.params.idTable
+        const time = req.body.time
+        const name = db.con.escape(req.body.name)
+        const n_people = req.body.n_people
+
         const reservation = new Reservation({
-            idClient:req.params.idUser,
-            idTable: req.params.idTable,
-            time:req.body.time,
-            name:req.body.name,
-            n_people:req.body.n_people,
+            idClient:idClient,
+            idTable: idTable,
+            time:time,
+            name:name,
+            n_people:n_people,
         })
 
         Reservation.create(reservation,(err,data)=>{
@@ -99,13 +114,19 @@ exports.update = (req,res) =>{
             message:"Por favor preencha os requisitos"
         })
     }else{
+
+        const idReservation = req.params.idReservation
+        const time = req.body.time
+        const name = db.con.escape(req.body.name)
+        const n_people = req.body.n_people
+
         const reservation = new Reservation({
-            time:req.body.time,
-            name:req.body.name,
-            n_people:req.body.n_people,
+            time:time,
+            name:name,
+            n_people:n_people,
         })
 
-        Reservation.update(req.params.idReservation,reservation,(err,data)=>{
+        Reservation.update(idReservation,reservation,(err,data)=>{
             if (err) {
 
                 if(err.kind === "not_found"){
@@ -127,7 +148,10 @@ exports.update = (req,res) =>{
 }
 
 exports.confirm = (req,res) =>{
-    Reservation.confirm(req.params.idReservation,(err,data)=>{
+
+    const idReservation = req.params.idReservation
+
+    Reservation.confirm(idReservation,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){
@@ -149,7 +173,10 @@ exports.confirm = (req,res) =>{
 }
 
 exports.deleteById = (req,res) =>{
-    Reservation.deleteById(req.params.idReservation,(err,data)=>{
+
+    const idReservation = req.params.idReservation
+
+    Reservation.deleteById(idReservation,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){
@@ -171,7 +198,9 @@ exports.deleteById = (req,res) =>{
 
 exports.deleteByRestaurant = (req,res) =>{
 
-    Reservation.deleteByRestaurant(req.params.idRestaurant,(err,data)=>{
+    const idRestaurant = req.params.idRestaurant
+
+    Reservation.deleteByRestaurant(idRestaurant,(err,data)=>{
         if (err) {
 
             if(err.kind === "not_found"){

@@ -124,13 +124,19 @@ exports.create = (req,res) =>{
 }
 
 exports.update = (req,res) =>{
+
     if(!req.body){
         req.status(400).send({
             message:"Por favor preencha os requisitos"
         })
     }
     else{
-        Rating.update(req.params.idPlate,req.params.idUser,req.body.value,(err,data)=>{
+        
+        const idPlate = req.params.idPlate
+        const idUser = req.params.idUser
+        const value = req.body.value
+
+        Rating.update(idPlate,idUser,value,(err,data)=>{
             if(err){
                 if(err.kind ==="not_found"){
                     res.status(404).send({"Not found": "O rating não foi encontrado"})
@@ -151,7 +157,11 @@ exports.update = (req,res) =>{
 
 
 exports.delete =(req,res) =>{
-    Rating.delete(req.params.idPlate,req.params.idUser,(err,data)=>{
+
+    const idPlate = req.params.idPlate
+    const idUser = req.params.idUser
+
+    Rating.delete(idPlate,idUser,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -169,7 +179,10 @@ exports.delete =(req,res) =>{
 }
 
 exports.deleteByUser = (req,res) =>{
-    Rating.deleteByUser(req.params.idUser,(err,data)=>{
+
+    const idUser = req.params.idUser
+
+    Rating.deleteByUser(idUser,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({

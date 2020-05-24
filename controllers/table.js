@@ -1,7 +1,11 @@
 const Table = require("../models/table.js")
+const db = require("../db")
 
 exports.getAll = (req,res) =>{
-    Table.getAll(req.params.idRestaurant,(err,data) =>{
+
+    const idRestaurant = req.params.idRestaurant
+
+    Table.getAll(idRestaurant,(err,data) =>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Mesas não foram encontradas"})
@@ -17,7 +21,10 @@ exports.getAll = (req,res) =>{
 }
 
 exports.findById = (req,res) => {
-    Table.findById(req.params.idTable,(err,data)=>{
+
+    const idTable = req.params.idTable
+
+    Table.findById(idTable,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Mesa não foi encontrada"})
@@ -36,14 +43,21 @@ exports.create = (req,res) =>{
         res.status(400).send({message:"Content cannot be empty"})
     }
     else{
-        
+
+        const name = db.con.escape(req.body.name)
+        const size = req.body.size
+        const description = db.con.escape(req.body.description)
+        const smoking = req.body.smoking
+        const outside = req.body.outside
+        const idRestaurant = req.params.idRestaurant
+
         const table = new Table({
-            name: req.body.name,
-            size: req.body.size,
-            description: req.body.description,
-            smoking:req.body.smoking,
-            outside:req.body.outside,
-            idRestaurant: req.params.idRestaurant
+            name: name,
+            size: size,
+            description: description,
+            smoking:smoking,
+            outside:outside,
+            idRestaurant: idRestaurant
         })
        
         Table.create (table,(err,data)=>{
@@ -64,15 +78,24 @@ exports.update = (req,res) =>{
         res.status(400).send({message:"Content cannot be empty"})
     }
     else{
+
+        const name = db.con.escape(req.body.name)
+        const size = req.body.size
+        const description = db.con.escape(req.body.description)
+        const smoking = req.body.smoking
+        const outside = req.body.outside
+        const idTable = req.params.idTable
+
+
         const table = new Table({
-            name: req.body.name,
-            size: req.body.size,
-            description: req.body.description,
-            smoking:req.body.smoking,
-            outside:req.body.outside,
+            name: name,
+            size: size,
+            description: description,
+            smoking:smoking,
+            outside:outside,
         })
 
-        Table.update(req.params.idTable,table,(err,data)=>{
+        Table.update(idTable,table,(err,data)=>{
             if(err){
                 if(err.kind === "not_found"){
                     res.status(404).send({"Not found": "Mesa não foi encontrada"})
@@ -89,7 +112,10 @@ exports.update = (req,res) =>{
 }
 
 exports.delete = (req,res) =>{
-    Table.delete(req.params.idTable,(err,data)=>{
+
+    const idTable = req.params.idTable
+
+    Table.delete(idTable,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Mesa não foi encontrada"})
@@ -104,7 +130,10 @@ exports.delete = (req,res) =>{
 }
 
 exports.deleteAll = (req,res) =>{
-    Table.deleteAll(req.params.idRestaurant,(err,data)=>{
+
+    const idRestaurant = req.params.idRestaurant
+
+    Table.deleteAll(idRestaurant,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Mesas não foram encontradas"})

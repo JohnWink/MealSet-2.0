@@ -23,6 +23,7 @@ const db = require("../db")
 }
 
 exports.findById = (req,res) =>{
+
     const idRestaurant = req.params.idRestaurant
  
     Restaurant.findById(idRestaurant,(err,data)=>{
@@ -44,6 +45,7 @@ exports.findById = (req,res) =>{
 
 
 exports.create = (req,res) =>{
+    
 const name = db.con.escape(req.body.name);
 const description = db.con.escape(req.body.description);
 const parking = req.body.parking;
