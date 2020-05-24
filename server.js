@@ -4,10 +4,26 @@ var bodyParser = require("body-parser");
 var admin = require('firebase-admin');
 var serviceAccount = require("./mealset-1579630397236-firebase-adminsdk-qcgpv-dd5a66335d.json")
 const {Storage} = require('@google-cloud/storage');
-const bcrypt = require("bcrypt")
-const passport = require("passport")
+var passport  = require('passport');
+var session = require('express-session')
 const db = require("./db");
 
+
+
+/*
+// The Firebase Admin SDK to access Cloud Firestore.
+const firebaseAdmin = require('firebase-admin');
+
+
+
+function getAppInDeployedFunctions() {
+  const functions = require('firebase-functions');
+  firebaseAdmin.initializeApp(functions.config().firebase);
+}
+
+getAppInDeployedFunctions()
+
+ */   
 
 
 var app = express();
@@ -46,6 +62,8 @@ admin.initializeApp({
 
   */
 
+
+
 module.exports= app;
 
 
@@ -58,6 +76,28 @@ require("./routes/restaurant_rating.js")(app)
 require("./routes/reservation")(app)
 require("./routes/plate_rating.js")(app)
 require("./routes/dayMeal.js")(app)
+require("./routes/user.js")(app)
+
+
+/*
+// For Passport
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+  })); // session secret
+  app.use(passport.initialize());
+  app.use(passport.session()); // persistentlogin sessions
+
+
+  app.post('/login',
+  passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true })
+  );
+*/
+
 
 app.listen(3000,function(){
     console.log("Server running at http://127.0.0:3000/")

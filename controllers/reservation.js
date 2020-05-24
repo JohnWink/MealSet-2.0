@@ -142,6 +142,7 @@ exports.confirm = (req,res) =>{
             }
 
         } else {
+
             res.status(200).send({"Success" : "A reserva foi confirmada"})
         }
     })

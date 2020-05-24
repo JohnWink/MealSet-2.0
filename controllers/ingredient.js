@@ -1,4 +1,5 @@
 const Ingredient = require("../models/ingredient.js")
+const db = require("../db.js")
 
 exports.getAll = (req, res) => {
     Ingredient.getAll((err, data) => {
@@ -17,7 +18,10 @@ exports.getAll = (req, res) => {
 }
 
 exports.findById = (req, res) => {
-    Ingredient.findById(req.params.idIngredient, (err, data) => {
+
+    const ingredient = db.con.escape(req.params.idIngredient)
+
+    Ingredient.findById(ingredient, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "O ingrediente não foi encontrado" })
@@ -38,12 +42,16 @@ exports.update = (req, res) => {
         res.status(400).send({ message: "Content cannot be empty" })
     }
     else {
-        Ingredient.findById(req.body.name,(err,data)=>{
+
+        const name = db.con.escape(req.body.name)
+        const idIngredient = db.con.escape(req.body.idIngredient)
+
+        Ingredient.findById(name,(err,data)=>{
             if(err){
                 // If there's no existing Ingredient with the updated name.
                 if(err.kind==="not_found"){
                     // Begin the update
-                    Ingredient.update(req.params.idIngredient, req.body.name, (err, data) => {
+                    Ingredient.update(idIngredient, name, (err, data) => {
                         if (err) {
                             if (err.kind === "not_found") {
                                 res.status(404).send({ "Not found": "O ingrediente não foi encontrado" })
@@ -75,10 +83,13 @@ exports.create = (req, res) => {
         res.status(400).send({ message: "Por favor preencha os requisitos" })
     }
     else {
-        Ingredient.findById(req.body.name,(err,data)=>{
+
+        const name = db.con.escape(req.body.name)
+
+        Ingredient.findById(name,(err,data)=>{
             if(err){
                 if(err.kind ==="not_found"){
-                    Ingredient.create(req.body.name, (err, data) => {
+                    Ingredient.create(name, (err, data) => {
                         if (err) {
                             res.status(500).send({
                                 message: err.message || err
@@ -102,7 +113,10 @@ exports.create = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Ingredient.delete(req.params.idIngredient, (err, data) => {
+
+    const idIngredient = db.con.escape(req.params.idIngredient)
+    
+    Ingredient.delete(idIngredient, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "O ingrediente não foi encontrado" })

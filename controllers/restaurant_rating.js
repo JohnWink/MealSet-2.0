@@ -14,7 +14,6 @@ exports.getAll = (req, res) => {
             }
 
         } else {
-            res.setHeader("Content-Type", "application/json; charset=utf-8")
             res.status(200).send({ "success": [data] })
         }
     })
@@ -91,13 +90,23 @@ exports.create = (req, res) => {
     }
 
     else {
+
         // Check if the Rating already exists
         Rating.findById(req.params.idRestaurant, req.params.idUser, (err, data) => {
             if (err) {
                 // if the rating doesn't exist yet
                 if (err.kind === "not_found") {
+
+                    const rating = new Rating({
+                        idRestaurant: req.params.idRestaurant,
+                        idUser: req.params.idUser,
+                        rating: req.body.rating,
+                        comment: req.body.comment,
+                        dateTime: req.body.dateTime
+                    })
+
                     // Create Rating
-                    Rating.create(req.params.idRestaurant, req.params.idUser, (err, data) => {
+                    Rating.create(rating,(err, data) => {
                         if (err) {
                             console.log("error catched")
                             res.status(500).send({
@@ -133,7 +142,19 @@ exports.update = (req, res) => {
         })
     }
     else {
-        Rating.update(req.params.idRestaurant, req.params.idUser, (err, data) => {
+        const rating = req.body.rating;
+        const comment = req.body.comment;
+        const dateTime = req.body.dateTime;
+        const idRestaurant = req.params.idRestaurant;
+        const idUser = req.params.idUser;
+
+        let user = {
+            rating: rating,
+            comment: comment,
+            dateTime: dateTime
+        }
+
+        Rating.update(user,idRestaurant,idUser, (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({ "Not found": "O rating não foi encontrado" })
@@ -154,7 +175,10 @@ exports.update = (req, res) => {
 
 
 exports.delete = (req, res) => {
-    Rating.delete(req.params.idRestaurant, req.params.idUser, (err, data) => {
+    const idRestaurant = req.params.idRestaurant;
+    const idUser = req.params.idUser;
+
+    Rating.delete(idRestaurant, idUser , (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -172,7 +196,8 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteByUser = (req, res) => {
-    Rating.deleteByUser(req.params.idUser, (err, data) => {
+    const idUser = req.params.idUser
+    Rating.deleteByUser(idUser, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({

@@ -1,7 +1,11 @@
 const DayMeal = require("../models/dayMeal.js")
+const db = require("../db")
 
 exports.findbyRestaurant = (req,res) =>{
-    DayMeal.findByRestaurant(req.params.idRestaurant,(err,data)=>{
+
+    const idRestaurant = req.params.idRestaurant
+
+    DayMeal.findByRestaurant(idRestaurant,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Os pratos do dia não foram encontrados" })
@@ -17,7 +21,10 @@ exports.findbyRestaurant = (req,res) =>{
 }
 
 exports.findByDay = (req,res) =>{
-    DayMeal.findByDay(req.params.idDayMeal,(err,data)=>{
+
+    const idDayMeal = db.con.escape(req.params.idDayMeal)
+
+    DayMeal.findByDay(idDayMeal,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Os pratos do dia não foram encontrados" })
@@ -33,7 +40,10 @@ exports.findByDay = (req,res) =>{
 }
 
 exports.findByPlate = (req,res) =>{
-    DayMeal.findByPlate(req.params.idPlate,(err,data)=>{
+
+    const idPlate = req.params.idPlate
+
+    DayMeal.findByPlate(idPlate,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Os pratos do dia não foram encontrados" })
@@ -50,13 +60,16 @@ exports.findByPlate = (req,res) =>{
 
 exports.create = (req,res) =>{
     
-        DayMeal.findById(req.params.idDayMeal,req.params.idPlate,(err,data)=>{
+    const idDayMeal = db.con.escape(req.params.idDayMeal)
+    const idPlate = req.params.idPlate
+
+        DayMeal.findById(idDayMeal,idPlate,(err,data)=>{
 
             if (err) {
 
                 if (err.kind === "not_found") {
 
-                   DayMeal.create(req.params.idDayMeal,req.params.idPlate,(err,data)=>{
+                   DayMeal.create(idDayMeal,idPlate,(err,data)=>{
 
                     if (err) {
 
@@ -82,13 +95,17 @@ exports.create = (req,res) =>{
 }
 
 exports.update = (req,res) =>{
-    DayMeal.findById(req.params.idDayMeal,req.params.idPlate,(err,data)=>{
+
+    const idDayMeal = db.con.escape(req.params.idDayMeal)
+    const idPlate = req.params.idPlate
+
+    DayMeal.findById(idDayMeal,idPlate,(err,data)=>{
 
         if (err) {
 
             if (err.kind === "not_found") {
 
-               DayMeal.update(req.params.idDayMeal,req.params.idPlate,(err,data)=>{
+               DayMeal.update(idDayMeal,idPlate,(err,data)=>{
 
                 if (err) {
                     if(err.kind==="not_found"){
@@ -119,7 +136,11 @@ exports.update = (req,res) =>{
 }
 
 exports.delete = (req,res) =>{
-    DayMeal.delete(req.params.idDayMeal,req.params.idPlate,(err,data)=>{
+    
+    const idDayMeal = db.con.escape(req.params.idDayMeal)
+    const idPlate = req.params.idPlate
+
+    DayMeal.delete(idDayMeal,idPlate,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "O prato do dia não foi encontrado" })
@@ -137,7 +158,10 @@ exports.delete = (req,res) =>{
 
 exports.deleteByRestaurant = (req,res) =>{
 
-    DayMeal.deleteByRestaurant(req.params.idRestaurant,(err,data)=>{
+
+    const idRestaurant = req.params.idRestaurant
+    
+    DayMeal.deleteByRestaurant(idRestaurant,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Nenhum prato do dia foi encontrado" })
@@ -155,7 +179,9 @@ exports.deleteByRestaurant = (req,res) =>{
 
 exports.deleteByPlate = (req,res) =>{
 
-    DayMeal.deleteByPlate(req.params.idPlate,(err,data)=>{
+    const idPlate = req.params.idPlate
+
+    DayMeal.deleteByPlate(idPlate,(err,data)=>{
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Nenhum prato do dia foi encontrado" })

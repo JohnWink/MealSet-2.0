@@ -1,8 +1,10 @@
 const Composition = require("../models/composition.js")
 const Ingredient = require("../models/ingredient.js")
+const db = require("../db")
 
 exports.getAll = (req, res) => {
-    Composition.getAll(req.params.idPlate,(err, data) => {
+    const idPlate = db.con.escape(req.params.idPlate)
+    Composition.getAll(idPlate,(err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({ "Not found": "Composições não foram encontradas" })
@@ -20,11 +22,13 @@ exports.getAll = (req, res) => {
 }
 
 exports.findById = (req, res) => {
-    console.log(req.params.idComposition)
-    Composition.findById(req.params.idComposition, (err, data) => {
+
+    const idComposition = req.params.idComposition
+
+    Composition.findById(idComposition, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
-                res.status(404).send({ "Not found": "Composição não encontrada" })
+                res.status(404).send({ "Not found": "Composição não foi encontrada" })
             }
             else {
                 res.status(500).send({
@@ -46,20 +50,26 @@ exports.create = (req, res) => {
         })
     }
     else {
+
+        const ingredient = db.con.escape(req.body.ingredient)
+        const quantity = req.body.quantity
+        const measurement = db.con.escape(req.body.measurement)
+        const idPlate = req.params.idPlate
+        
         const composition = new Composition({
-            ingredient: req.body.ingredient,
-            quantity: req.body.quantity,
-            measurement: req.body.measurement,
-            idPlate: req.params.idPlate
+            ingredient: ingredient,
+            quantity: quantity,
+            measurement: measurement,
+            idPlate: idPlate
         })
         //Check if the ingredient already exists
-        Ingredient.findById(req.body.ingredient,(err,data) =>{
+        Ingredient.findById(ingredient,(err,data) =>{
 
            // if there's an error detected, seperate the errors
             if(err){
                 // if it doesn't exist, create a new one
                 if (err.kind === "not_found") {
-                    Ingredient.create(req.body.ingredient,(err,data)=>{
+                    Ingredient.create(ingredient,(err,data)=>{
                         // If the ingredient isn't created, return error
                         if(err){
                             console.log("error catched")
@@ -119,20 +129,27 @@ exports.update = (req, res) => {
             message: "Content Can't be empty!"
         })
     } else {
+
+        const ingredient = db.con.escape(req.body.ingredient)
+        const quantity = req.body.quantity
+        const measurement= db.con.escape(req.body.measurement)
+        const idComposition = req.params.idComposition
+ 
+
         const composition = new Composition({
-            ingredient: req.body.ingredient,
-            quantity: req.body.quantity,
-            measurement: req.body.measurement
+            ingredient: ingredient,
+            quantity: quantity,
+            measurement: measurement
         })
-        Ingredient.findById(req.body.ingredient,(err,data)=>{
+        Ingredient.findById(ingredient,(err,data)=>{
             if(err){
                 if(err.kind==="not_found"){
-                    Ingredient.create(req.body.ingredient,(err,data)=>{
+                    Ingredient.create(ingredient,(err,data)=>{
                         if(err){
                             res.status(500).send({message:err.message || "Ocorreu um erro"})
                         }
                         else{
-                            Composition.update(req.params.idComposition, composition, (err, data) => {
+                            Composition.update(idComposition, composition, (err, data) => {
                                 if (err) {
                                     if (err.kind === "not_found") {
                                         res.status(404).send({ "Not found": "Composição não encontrada" })
@@ -154,7 +171,7 @@ exports.update = (req, res) => {
                     })
                 }
             }else{
-                Composition.update(req.params.idComposition, composition, (err, data) => {
+                Composition.update(idComposition, composition, (err, data) => {
                     if (err) {
                         if (err.kind === "not_found") {
                             res.status(404).send({ "Not found": "Composição não encontrada" })
@@ -175,7 +192,10 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req,res) =>{
-    Composition.delete(req.params.idComposition,(err,data)=>{
+    
+    const idComposition = req.params.idComposition
+
+    Composition.delete(idComposition,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Composição não encontrada"})
@@ -191,7 +211,10 @@ exports.delete = (req,res) =>{
 }
 
 exports.deleteAll = (req,res) =>{
-    Composition.deleteAll(req.params.idPlate,(err,data)=>{
+
+    const idPlate = req.params.idPlate
+
+    Composition.deleteAll(idPlate,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found": "Composição não encontrada"})

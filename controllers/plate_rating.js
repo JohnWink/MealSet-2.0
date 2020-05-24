@@ -1,8 +1,12 @@
 const Rating = require("../models/plate_rating.js")
+const db = require("../db")
 
 exports.findById = (req,res) =>{
- 
-    Rating.findById(req.params.idPlate,req.params.idUser,(err,data)=>{
+
+    const idPlate = req.params.idPlate
+    const idUser = req.params.idUser
+
+    Rating.findById(idPlate,idUser,(err,data)=>{
       
         if (err) {
             if(err.kind === "not_found"){
@@ -23,7 +27,10 @@ exports.findById = (req,res) =>{
 }
 
 exports.findByPlate = (req,res) =>{
-    Rating.findByPlate(req.params.idPlate,(err,data)=>{
+
+    const idPlate = req.params.idPlate
+
+    Rating.findByPlate(idPlate,(err,data)=>{
         if (err) {
             if(err.kind === "not_found"){
                 res.status(404).send({
@@ -43,7 +50,10 @@ exports.findByPlate = (req,res) =>{
 }
 
 exports.findByUser = (req,res) =>{
-    Rating.findByUser(req.params.idUser,(err,data)=>{
+
+    const idUser = req.params.idUser
+
+    Rating.findByUser(idUser,(err,data)=>{
         if (err) {
             if(err.kind === "not_found"){
                 res.status(404).send({
@@ -70,14 +80,21 @@ exports.create = (req,res) =>{
         })
     }
 
+
+
     else{
+
+        const idPlate = req.params.idPlate
+        const idUser = req.params.idUser
+        const value = req.body.value
+
         // Check if the Rating already exists
-        Rating.findById(req.params.idPlate,req.params.idUser,(err,data)=>{
+        Rating.findById(idPlate,idUser,(err,data)=>{
             if (err) {
                 // if the rating doesn't exist yet
                 if(err.kind === "not_found"){
                     // Create Rating
-                    Rating.create(req.params.idPlate,req.params.idUser,req.body.value,(err,data)=>{
+                    Rating.create(idPlate,idUser,value,(err,data)=>{
                         if (err) {
                             console.log("error catched")
                             res.status(500).send({

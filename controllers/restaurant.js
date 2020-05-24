@@ -1,5 +1,5 @@
 const Restaurant = require("../models/restaurant.js")
-
+const db = require("../db")
 
  exports.getAll = (req,res) =>{
     Restaurant.getAll((err,data)=>{
@@ -23,8 +23,9 @@ const Restaurant = require("../models/restaurant.js")
 }
 
 exports.findById = (req,res) =>{
-    console.log(req.params.idRestaurant)
-    Restaurant.findById(req.params.idRestaurant,(err,data)=>{
+    const idRestaurant = req.params.idRestaurant
+ 
+    Restaurant.findById(idRestaurant,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found" : "Restaurante não foi encontrado"})
@@ -43,6 +44,13 @@ exports.findById = (req,res) =>{
 
 
 exports.create = (req,res) =>{
+const name = db.con.escape(req.body.name);
+const description = db.con.escape(req.body.description);
+const parking = req.body.parking;
+const foto = db.con.escape(req.body.foto);
+const gpsAddress = db.con.escape(req.body.gpsAddress);
+const gps = db.con.escape(req.body.gps);
+const zipCode = req.body.zipCode;
 
     //Validar pedido
     if(!req.body){
@@ -53,13 +61,13 @@ exports.create = (req,res) =>{
     else{
         //Create Restaurant
         const restaurant = new Restaurant ({
-            name: req.body.name,
-            description: req.body.description,
-            parking: req.body.parking,
-            foto: req.body.foto,
-            gpsAdress: req.body.gps,
-            address: req.body.address,
-            zipCode: req.body.zipCode
+            name: name,
+            description: description,
+            parking: parking,
+            foto: foto,
+            gpsAddress: gpsAddress,
+            address: gps,
+            zipCode: zipCode
         })
 
         //Save Restaurant in the database
@@ -84,18 +92,27 @@ exports.update = (req,res) =>{
             message:"Content Can't be empty!" 
         })
     }else{
+
+        const name = db.con.escape(req.body.name)
+        const description = db.con.escape(req.body.description)
+        const parking = req.body.parking
+        const foto = req.body.foto
+        const gps = db.con.escape(req.body.gps)
+        const address = db.con.escape(req.body.address)
+        const zipCode = req.body.zipCode
+        const idRestaurant = req.params.idRestaurant
  
        const restaurant = new Restaurant({
-            name: req.body.name,
-            description: req.body.description,
-            parking: req.body.parking,
-            foto: req.body.foto,
-            gpsAdress: req.body.gps,
-            address: req.body.address,
-            zipCode: req.body.zipCode
+            name: name,
+            description: description,
+            parking: parking,
+            foto: foto,
+            gpsAdress: gps,
+            address: address,
+            zipCode: zipCode
        })
 
-       Restaurant.update(req.params.idRestaurant,restaurant,(err,data)=>{
+       Restaurant.update(idRestaurant,restaurant,(err,data)=>{
            if(err){
                 if(err.kind === "not_found"){
                     res.status(404).send({"Not found" : "Restaurante não foi encontrado"})
@@ -113,7 +130,10 @@ exports.update = (req,res) =>{
 }
 
 exports.delete = (req,res) =>{
-    Restaurant.delete(req.params.idRestaurant,(err,data)=>{
+    
+    const idRestaurant = req.params.idRestaurant
+    
+    Restaurant.delete(idRestaurant,(err,data)=>{
         if(err){
             if(err.kind === "not_found"){
                 res.status(404).send({"Not found" : "Restaurante não foi encontrado"})

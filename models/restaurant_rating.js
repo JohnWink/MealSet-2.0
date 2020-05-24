@@ -4,8 +4,8 @@ const Rating = function (rating) {
     this.idRestaurante = rating.idRestaurant
     this.idCliente = rating.idUser
     this.rating = rating.rating
-    this.comentario = rating.comment
-    this.data_hota = rating.dateHour
+    this.comentário = rating.comment
+    this.data_hora = rating.dateTime
 
 }
 
@@ -88,10 +88,10 @@ Rating.findByRestaurant = (idRestaurant, result) => {
 }
 
 
-Rating.create = (idRestaurant, idUser, result) => {
+Rating.create = (newRating,result) => {
 
-    db.con.query("INSERT INTO Rating_Restaurante SET idRestaurante = ?, idCliente = ?",
-        [idRestaurant, idUser], (err, res) => {
+    db.con.query("INSERT INTO Rating_Restaurante SET ?",
+        newRating, (err, res) => {
 
             if (err) {
                 console.log("Error:", err)
@@ -105,9 +105,9 @@ Rating.create = (idRestaurant, idUser, result) => {
 
 }
 
-Rating.update = (idRestaurant, idUser, result) => {
-    db.con.query("UPDATE Rating_Restaurante WHERE idRestaurante = ? AND idCliente = ? AND ativo=1",
-        [idRestaurant, idUser], (err, res) => {
+Rating.update = (newRating,idRestaurant, idUser, result) => {
+    db.con.query("UPDATE Rating_Restaurante SET rating=? , Comentário=? , data_hora=?  WHERE idRestaurante = ? AND idCliente = ? AND ativo=1",
+        [newRating.rating,newRating.comment,newRating.dateTime,idRestaurant, idUser], (err, res) => {
             if (err) {
                 console.log("Error:", err)
                 return result(err, null)
@@ -124,7 +124,7 @@ Rating.update = (idRestaurant, idUser, result) => {
 
 Rating.delete = (idRestaurant, idUser, result) => {
 
-    db.con.query("UPDATE Rating_restaurante SET ativo = 0 WHERE idRestaurante = ? AND idCliente = ? AND ativo=1",
+    db.con.query("UPDATE Rating_Restaurante SET ativo = 0 WHERE idRestaurante = ? AND idCliente = ? AND ativo=1",
         [idRestaurant, idUser], (err, res) => {
 
             if (err) {
